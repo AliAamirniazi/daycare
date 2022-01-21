@@ -3,10 +3,12 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
 const normalize = require('normalize-url');
+const auth = require('../../middleware/auth');
 
 const User = require('../../models/User');
 router.post(
     '/',
+    auth,
     check('name', 'Name is required').notEmpty(),
     check('name', 'Name is required').notEmpty(),
     check('email', 'Please include a valid email').isEmail(),

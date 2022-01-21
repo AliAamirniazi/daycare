@@ -1,22 +1,22 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema
 
-const UserSchema = new mongoose.Schema({
-    name:{
+const ChildrenSchema = new mongoose.Schema({
+    fullName:{
         type:String,
         required:true
     },
-    email:{
+    age:{
         type:String,
         required:true,
-        unique:true
     },
-    password:{
+    gender:{
         type:String,
         required:true
     },
-    role:{
-        type:String,
-        required:true
+    user:{
+        type:Schema.Types.ObjectId,
+        ref : "User"
     },
     date:{
         type: Date,
@@ -24,4 +24,4 @@ const UserSchema = new mongoose.Schema({
     }
 });
 
-module.exports = User = mongoose.model('User',UserSchema);
+module.exports = Children = mongoose.model('Children',ChildrenSchema);
