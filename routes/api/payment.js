@@ -55,7 +55,7 @@ router.get('/payment/:id', auth, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
-router.get('/generatePayment', auth, async (req, res) => {
+router.post('/generatePayment', auth, async (req, res) => {
   try {
     const children = await Children.find();
     for (const elemt of children) {

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
+const moment = require('moment');
+
 const AttendanceSchema = new mongoose.Schema({
     children:{
         type:Schema.Types.ObjectId,
@@ -7,15 +9,21 @@ const AttendanceSchema = new mongoose.Schema({
     },
     checkIn:{
         type: Date,
-        required:true,
+        required:false,
+        default:null
     },
     checkOut:{
         type: Date,
-        required:true
+        required:false,
+        default:null
     },
     date:{
         type: Date,
-        default:Date.now
+        default:moment().format('YYYY-MM-DD')
+    },
+    createdOn:{
+        type: Date,
+        default:Date.now()
     }
 });
 

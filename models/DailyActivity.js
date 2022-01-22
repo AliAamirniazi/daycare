@@ -1,26 +1,23 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
+const moment = require('moment');
 
 const DailyActivitySchema = new mongoose.Schema({
-    children:{
+    user:{
         type:Schema.Types.ObjectId,
-        ref : "Children"
-    },
-    day:{
-        type:String,
-        required:true
+        ref : "User"
     },
     activity:{
         type:String,
         required:true,
     },
-    status:{
-        type:String,
-        required:true
-    },
     date:{
         type: Date,
-        default:Date.now
+        default:moment().format('YYYY-MM-DD')
+    },
+    createdOn:{
+        type: Date,
+        default:Date.now()
     }
 });
 
