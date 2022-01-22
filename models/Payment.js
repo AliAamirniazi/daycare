@@ -2,9 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
 const PaymentSchema = new mongoose.Schema({
-    user:{
+    parent:{
         type:Schema.Types.ObjectId,
-        ref : "User"
+        ref : "Parent"
+    },
+    children:{
+        type:Schema.Types.ObjectId,
+        ref : "Children"
     },
     month:{
         type:String,
@@ -16,7 +20,7 @@ const PaymentSchema = new mongoose.Schema({
     },
     amount:{
         type:String,
-        required:true
+        required:false
     },
     status:{
         type:String,

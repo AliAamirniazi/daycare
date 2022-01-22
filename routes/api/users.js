@@ -6,6 +6,7 @@ const normalize = require('normalize-url');
 const auth = require('../../middleware/auth');
 
 const User = require('../../models/User');
+const Parent = require('../../models/Parent');
 router.post(
     '/',
     auth,
@@ -26,30 +27,47 @@ router.post(
         const { name, email, password, role } = req.body;
 
         try {
-            let user = await User.findOne({ email });
 
-            if (user) {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: 'User already exists' }] });
+            if (role === 'Parent') {
+                let parent = await Parent.findOne({ email });
+                if (parent) {
+                    return res
+                        .status(400)
+                        .json({ errors: [{ msg: 'Parent already exists' }] });
+                }
+
+                parent = new Parent({
+                    name,
+                    email,
+                    password,
+                });
+
+                const salt = await bcrypt.genSalt(10);
+
+                parent.password = await bcrypt.hash(password, salt);
+                await parent.save();
+                res.json("user is regestered");
+            } else {
+                let user = await User.findOne({ email });
+                if (user) {
+                    return res
+                        .status(400)
+                        .json({ errors: [{ msg: 'User already exists' }] });
+                }
+
+                user = new User({
+                    name,
+                    email,
+                    password,
+                    role
+                });
+
+                const salt = await bcrypt.genSalt(10);
+
+                user.password = await bcrypt.hash(password, salt);
+                await user.save();
+                res.json("user is regestered");
             }
-
-            user = new User({
-                name,
-                email,
-                password,
-                role
-            });
-
-            const salt = await bcrypt.genSalt(10);
-
-            user.password = await bcrypt.hash(password, salt);
-
-            await user.save();
-
-            res.json("user is regestered");
-
-
         } catch (err) {
             console.error(err.message);
             res.status(500).send('Server error');

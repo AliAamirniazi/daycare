@@ -18,6 +18,10 @@ const ChildrenSchema = new mongoose.Schema({
         type:Schema.Types.ObjectId,
         ref : "User"
     },
+    parent:{
+        type:Schema.Types.ObjectId,
+        ref : "Parent"
+    },
     date:{
         type: Date,
         default:Date.now

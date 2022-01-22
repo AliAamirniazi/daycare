@@ -13,20 +13,22 @@ router.post(
     check('age', 'Age is required').notEmpty(),
     check('gender', 'Gender is required').notEmpty(),
     check('user', 'Role is required').notEmpty(),
+    check('parent', 'Role is required').notEmpty(),
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { fullName, age, gender, user } = req.body;
+        const { fullName, age, gender, user, parent } = req.body;
 
         try {
            let children = new Children({
                 fullName,
                 age,
                 gender,
-                user
+                user,
+                parent
             });
             await children.save();
 
@@ -41,7 +43,7 @@ router.post(
 );
 router.get('/', auth, async (req, res) => {
     try {
-      const children = await Children.find().populate('user').sort({ date: -1 });
+      const children = await Children.find().populate('user').populate('parent').sort({ date: -1 });
       res.json(children);
     } catch (err) {
       console.error(err.message);
