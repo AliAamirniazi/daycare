@@ -1,17 +1,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+// import App from './App';
+import { Index } from './Pages/index'
+// import {UseCreateUser} from './resources/useCreateUser'
 import reportWebVitals from './reportWebVitals';
-
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { createTheme  , ThemeProvider } from "@material-ui/core/styles";
+import './assets/fonts/fontawesome/css/all.css';
+// import store from './redux/store';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from 'react-query'
+import { Provider } from 'react-redux';
+const theme = createTheme ({
+  palette: {
+    background: {
+      default: "#FFFFFF"
+    }
+  }
+});
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Index />
+      </ThemeProvider>
+    </QueryClientProvider>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

@@ -30,10 +30,9 @@ router.post(
 
             if (role === 'Parent') {
                 let parent = await Parent.findOne({ email });
-                if (parent) {
-                    return res
-                        .status(400)
-                        .json({ errors: [{ msg: 'Parent already exists' }] });
+                let user = await User.findOne({ email });
+                if (user || parent) {
+                    return res.json({ error: 'User with this email already exists' });
                 }
 
                 parent = new Parent({
@@ -46,13 +45,12 @@ router.post(
 
                 parent.password = await bcrypt.hash(password, salt);
                 await parent.save();
-                res.json("user is regestered");
+                res.json({ message: "user is regestered" });
             } else {
+                let parent = await Parent.findOne({ email });
                 let user = await User.findOne({ email });
-                if (user) {
-                    return res
-                        .status(400)
-                        .json({ errors: [{ msg: 'User already exists' }] });
+                if (user || parent) {
+                    return res.json({ error: 'User with this email already exists' });
                 }
 
                 user = new User({
@@ -66,7 +64,7 @@ router.post(
 
                 user.password = await bcrypt.hash(password, salt);
                 await user.save();
-                res.json("user is regestered");
+                res.json({ message: "user is regestered" });
             }
         } catch (err) {
             console.error(err.message);
@@ -74,5 +72,40 @@ router.post(
         }
     }
 );
+router.get('/all_users', auth, async (req, res) => {
+    const { search } = req.query;
+    let allUser = []
+    try {
+        const user = await User.aggregate(
+            [
+                {
+                    $match: { $or: [{ email: search }, { name: { $regex: '.*' + search + '.*' } }] }
+                }
+            ]
+
+        )
+        for (const elemt of user) {
+            allUser.push(elemt)
+        }
+        const parent = await Parent.aggregate(
+            [
+                {
+                    $match: { $or: [{ email: search }, { name: { $regex: '.*' + search + '.*' } }] }
+                }
+            ]
+
+        )
+        for (const elemt of parent) {
+            allUser.push(elemt)
+        }
+        const countParent = await Parent.countDocuments(search ? { $or: [{ email: search }, { name: { $regex: '.*' + search + '.*' } }] } : null);
+        const countUser = await User.countDocuments(search ? { $or: [{ email: search }, { name: { $regex: '.*' + search + '.*' } }] } : null);
+
+        res.json({ user: allUser, count: countParent + countUser });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
 
 module.exports = router;
