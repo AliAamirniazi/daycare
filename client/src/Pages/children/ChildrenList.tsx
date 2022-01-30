@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import UserListing from '../../components/userMangement/UserListing';
+import ChildrenListing from '../../components/childrenMangement/ChildrenListing';
 
 import { Button, makeStyles } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-export const ManageUser = () => {
+export const ChildrenList = () => {
     const classes = useStyles1();
 
     return (
@@ -12,10 +12,10 @@ export const ManageUser = () => {
             <div className={classes.root}>
 
                 <main className='width overfllowAuto pr-20 bodyMrTop manage-user-page'>
-                    <div className="text-left">
-                        <h3>Users List</h3>
+                     <div className="text-left">
+                        <h3>Childrens List</h3>
                     </div>
-                    <UserListing />
+                    <ChildrenListing />
                 </main>
             </div>
         </>

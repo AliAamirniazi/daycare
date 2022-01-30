@@ -18,6 +18,10 @@ import { isLogin, isAdmin, isAgent } from '.././utils/auth';
 import { NavLink, useHistory } from "react-router-dom";
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
 import { useTranslation } from "react-i18next";
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import { Collapse, ListSubheader } from '@material-ui/core';
+import { useLocation } from 'react-router-dom'
 
 const drawerWidth = 240;
 
@@ -31,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     display: 'flex',
+  },
+  nested: {
+    paddingLeft: theme.spacing(4),
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -99,7 +106,18 @@ export const SideBar = (props: any) => {
   const { window } = props;
   const classes = useStyles();
   const { t, i18n } = useTranslation();
+  const [open, setOpen] = React.useState(true);
+  const [tOpen, setTOpen] = React.useState('');
 
+  const handleClick = (id: any) => {
+    setOpen(!open);
+
+    if (tOpen === id) {
+      setTOpen("")
+    } else {
+      setTOpen(id);
+    }
+  };
 
 
   const drawer = (
@@ -107,18 +125,59 @@ export const SideBar = (props: any) => {
 
       {(isLogin() && isAdmin() ?
         <List>
-          <ListItem button component={NavLink} activeClassName="highlighted" to="/add_User">
-            <ListItemIcon className={classes.textcolor}> <i className="fas fa-user-plus"></i></ListItemIcon>
-            <ListItemText className={classes.textcolor} primary={t("Add users")} />
+          <ListItem button onClick={() => handleClick('users')}>
+            <ListItemIcon>
+              <ListItemIcon className={classes.textcolor}> <i className="fas fa-users dashboardIcon"></i></ListItemIcon>
+            </ListItemIcon>
+            <ListItemText className={classes.textcolor} primary="Users" />
+            {tOpen === 'users' ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
-          <ListItem button component={NavLink} activeClassName="highlighted" to="/manage_users">
-            <ListItemIcon className={classes.textcolor}> <i className="fas fa-users dashboardIcon"></i></ListItemIcon>
-            <ListItemText className={classes.textcolor} primary={t("Manage Users")} />
+          <Collapse in={tOpen === 'users' ? true : false} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/users/add">
+                <ListItemIcon className={classes.textcolor}> <i className="fas fa-user-plus"></i></ListItemIcon>
+                <ListItemText className={classes.textcolor} primary={t("Add users")} />
+              </ListItem>
+              <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/users">
+                <ListItemIcon className={classes.textcolor}> <i className="fas fa-users dashboardIcon"></i></ListItemIcon>
+                <ListItemText className={classes.textcolor} primary={t("Users")} />
+              </ListItem>
+            </List>
+          </Collapse>
+          <ListItem button onClick={() => handleClick('childrens')}>
+            <ListItemIcon>
+              <ListItemIcon className={classes.textcolor}> <i className="fas fa-users dashboardIcon"></i></ListItemIcon>
+            </ListItemIcon>
+            <ListItemText className={classes.textcolor} primary="Childrens" />
+            {tOpen === 'childrens' ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
-          {/* <ListItem button component={NavLink} activeClassName="highlighted" to="/upload_csv">
-            <ListItemIcon className={classes.textcolor}> <i className="fas fa-file-csv"></i></ListItemIcon>
-            <ListItemText className={classes.textcolor} primary={'Upload CSV'} />
-          </ListItem> */}
+          <Collapse in={tOpen === 'childrens' ? true : false} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/childrens/add">
+                <ListItemIcon className={classes.textcolor}> <i className="fas fa-file-csv"></i></ListItemIcon>
+                <ListItemText className={classes.textcolor} primary={'Register Children'} />
+              </ListItem>
+              <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/childrens/">
+                <ListItemIcon className={classes.textcolor}> <i className="fas fa-file-csv"></i></ListItemIcon>
+                <ListItemText className={classes.textcolor} primary={'Childrens'} />
+              </ListItem>
+            </List>
+          </Collapse>
+          <ListItem button onClick={() => handleClick('payments')}>
+            <ListItemIcon>
+              <ListItemIcon className={classes.textcolor}> <i className="fas fa-users dashboardIcon"></i></ListItemIcon>
+            </ListItemIcon>
+            <ListItemText className={classes.textcolor} primary="Payment" />
+            {tOpen === 'payments' ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          <Collapse in={tOpen === 'payments' ? true : false} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem button component={NavLink} className={classes.nested} activeClassName="highlighted" to="/payments">
+                <ListItemIcon className={classes.textcolor}> <i className="fas fa-file-csv"></i></ListItemIcon>
+                <ListItemText className={classes.textcolor} primary={'Payments'} />
+              </ListItem>
+            </List>
+          </Collapse>
         </List> :
         <List>
           {/* <ListItem button component={NavLink} activeClassName="highlighted" to="/select_user">
@@ -126,9 +185,9 @@ export const SideBar = (props: any) => {
               <ListItemText className={classes.textcolor} primary={'Select User'} />
             </ListItem> */}
           <ListItem button component={NavLink} activeClassName="highlighted" to="/dashboard">
-              <ListItemIcon className={classes.textcolor}><img src={Dashboard} alt="" /></ListItemIcon>
-              <ListItemText className={classes.textcolor} primary={'Dashboard'} />
-            </ListItem>
+            <ListItemIcon className={classes.textcolor}><img src={Dashboard} alt="" /></ListItemIcon>
+            <ListItemText className={classes.textcolor} primary={'Dashboard'} />
+          </ListItem>
           {user_info ? JSON.parse(user_info).permission.some((permission: { [x: string]: string; }) => permission['permission'] === 'Fleet Details') ?
             <ListItem button component={NavLink} activeClassName="highlighted" to="/fleet_details">
               <ListItemIcon className={classes.textcolor}> <img src={Bus} alt="Dashboard Icon" className="dashboardIcon" /></ListItemIcon>

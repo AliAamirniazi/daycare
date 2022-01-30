@@ -95,7 +95,7 @@ export const SignIn = () => {
                     <div>An error occurred: {mutation.error}</div>
                   ) : null}
 
-                  { mutation.isSuccess && mutation.data?.data.status === 1 ? (isLogin() && isAdmin() ? <div> <Redirect to='/manage_users' /></div> : (isLogin() && isAgent() ? <Redirect to='/dashboard' /> : <Redirect to='/dashboard' />)) : <div>{mutation.data?.data.message}</div>}
+                  { mutation.isSuccess && mutation.data?.data.status === 1 ? (isLogin() && isAdmin() ? <div> <Redirect to='/users' /></div> : (isLogin() && isAgent() ? <Redirect to='/dashboard' /> : <Redirect to='/dashboard' />)) : <div>{mutation.data?.data.message}</div>}
                   <div className="signinbutton custom-btn">
                     <Link to='' onClick={() => {
                       mutation.mutate({ email: email.toLowerCase(), password: password })

@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
 const normalize = require('normalize-url');
 const auth = require('../../middleware/auth');
-
+const moment = require('moment');
 const Payment = require('../../models/Payment');
 const Children = require('../../models/Children');
 
@@ -24,16 +24,21 @@ router.post(
     }
 
     const { parent, month, year, amount, children, status } = req.body;
-    Payment.findOneAndUpdate({children,parent,month}, {amount,status}, {upsert: false}, function(err, doc) {
-      if (err) return res.send(500, {error: err});
+    Payment.findOneAndUpdate({ children, parent, month }, { amount, status }, { upsert: false }, function (err, doc) {
+      if (err) return res.send(500, { error: err });
       return res.send('Succesfully saved.');
-  });
+    });
   }
 );
 router.get('/payment', auth, async (req, res) => {
+  const { search } = req.query;
+  const month = moment(search?.date).format('MMMM');
+  const year = moment(search?.date).format('YYYY');
+  const status = JSON.parse(search).status;
   try {
-    const payment = await Payment.find().populate('parent').sort({ date: -1 });
-    res.json(payment);
+    const payment = await Payment.find(search ? { $and: [{ month: month }, { year: year }, { status: status === 'All' ? ['Paid', 'Unpaid'] : status }] } : null).populate('children').sort({ date: -1 });
+    const count = await Payment.countDocuments(search ? { $and: [{ month: month }, { year: year }, { status: status === 'All' ? ['Paid', 'Unpaid'] : status }] } : null);
+    res.json({ payment: payment, count: count });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -56,17 +61,18 @@ router.get('/payment/:id', auth, async (req, res) => {
   }
 });
 router.post('/generatePayment', auth, async (req, res) => {
+  const { amount } = req.body;
   try {
     const children = await Children.find();
     for (const elemt of children) {
-      let payementExist = await Payment.findOne({ month:"Jan",children: elemt._id });
+      let payementExist = await Payment.findOne({ month: "Jan", children: elemt._id });
       if (!payementExist) {
         let payment = new Payment({
           parent: elemt.parent,
           children: elemt._id,
-          month: "Jan",
+          month: "January",
           year: "2022",
-          amount: null,
+          amount: amount,
           status: "Unpaid"
         });
         await payment.save();

@@ -1,21 +1,16 @@
 
-import React, { useState, useEffect } from 'react';
-import UserListing from '../../components/userMangement/UserListing';
+import React from 'react';
+import UserDetailList from '../../components/userMangement/UserDetailList';
 
-import { Button, makeStyles } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-export const ManageUser = () => {
+import { makeStyles } from '@material-ui/core';
+export const ChildrenDetail = () => {
     const classes = useStyles1();
-
     return (
         <>
             <div className={classes.root}>
 
                 <main className='width overfllowAuto pr-20 bodyMrTop manage-user-page'>
-                    <div className="text-left">
-                        <h3>Users List</h3>
-                    </div>
-                    <UserListing />
+                    <UserDetailList />
                 </main>
             </div>
         </>

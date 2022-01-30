@@ -9,7 +9,8 @@ import { useTranslation, Trans } from "react-i18next";
 const useStyles2 = makeStyles({
 
   root: {
-    display: "flex"
+    display: "flex",
+    marginLeft:'20px'
   },
   table: {
     minWidth: 650

@@ -7,7 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import useManageUser from '../../resources/useManageUser';
+import useChildren from '../../resources/useChildren';
 import { useHistory } from 'react-router-dom';
 import Eye from '../../assets/icon/View.png';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function UserListing() {
+export default function ChildrenListing() {
   const { t } = useTranslation();
   const [order, setOrder] = React.useState<Order>('asc');
   const [total, setTotal] = useState(0)
@@ -91,14 +91,14 @@ export default function UserListing() {
   const [search, setSearch] = React.useState('');
   let history = useHistory();
 
-  const { data, status, error, refetch } = useManageUser({
+  const { data, status, error, refetch } = useChildren({
     search: search
   });
   const getUserData = () => {
     refetch()
     if (status === "success") {
 
-      setUsersList(data?.user)
+      setUsersList(data?.children)
       setTotal(data?.count)
     }
   }
@@ -141,7 +141,7 @@ export default function UserListing() {
     <div className={classes.root}>
       <Paper className={classes.paper} elevation={3}>
         <div className="mrbDate">
-          <Grid container direction="row" alignItems="center" >
+          <Grid container direction="row" alignItems="center">
             <Grid item xs={12} sm={6} lg={10}>
             </Grid>
             <Grid item xs={12} sm={6} lg={2}>
@@ -153,7 +153,7 @@ export default function UserListing() {
                 onChange={(e) => {
                   setSearch(e.target.value)
                 }}
-                label={t("Email") + "," + t("Full Name")} variant="outlined"
+                label={t("Full Name")} variant="outlined"
               />
             </Grid>
           </Grid>
@@ -168,23 +168,25 @@ export default function UserListing() {
             <TableHead>
               <TableRow>
                 <TableCell
-                  key="FullName"
                   className={classes.tabelHeadTitle}
                 >
                   {t("Full Name")}
                 </TableCell>
                 <TableCell
-                  key="Username"
                   className={classes.tabelHeadTitle}
                 >
-                  {t("Email")}
+                  {t("Gender")}
                 </TableCell>
 
                 <TableCell
-                  key="Role"
                   className={classes.tabelHeadTitle}
                 >
-                  {t("Role")}
+                  {t("Parent")}
+                </TableCell>
+                <TableCell
+                  className={classes.tabelHeadTitle}
+                >
+                  {t("Teacher")}
                 </TableCell>
 
                 <TableCell
@@ -212,13 +214,14 @@ export default function UserListing() {
                   >
 
 
-                    <TableCell align="left">{row.name}</TableCell>
-                    <TableCell align="left">{row.email}</TableCell>
-                    <TableCell align="left">{row.role}</TableCell>
+                    <TableCell align="left">{row?.fullName}</TableCell>
+                    <TableCell align="left">{row?.gender}</TableCell>
+                    <TableCell align="left">{row?.parent?.name}</TableCell>
+                    <TableCell align="left">{row.user?.name}</TableCell>
                     <TableCell align="left">
                       <div
                         onClick={() => {
-                          history.push(`/users/detail/${row.role}/${row._id}`);
+                          history.push(`/manage_users/user_detail/${row.Id}`);
                         }}
                       ><img src={Eye} className="eyeIcon" alt="" />
                       </div>

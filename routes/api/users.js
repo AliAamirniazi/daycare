@@ -7,6 +7,7 @@ const auth = require('../../middleware/auth');
 
 const User = require('../../models/User');
 const Parent = require('../../models/Parent');
+const Children = require('../../models/Children');
 router.post(
     '/',
     auth,
@@ -108,4 +109,23 @@ router.get('/all_users', auth, async (req, res) => {
     }
 });
 
+router.get('/allTeacher', auth, async (req, res) => {
+    try {
+        const teacher = await User.find({ role: "Teacher" });
+        res.json(teacher);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+router.get('/allParent', auth, async (req, res) => {
+    try {
+        const teacher = await Parent.find();
+        res.json(teacher);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
 module.exports = router;

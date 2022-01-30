@@ -8,7 +8,8 @@ import { SigninPage } from './signin/index'
 // import { LiveOperationstPage } from './liveOperations/index'
 // import { HelpPage } from './help/index'
 // import { DashboardPage } from './dashboard/index'
-import { AddUserPage } from './addUser/index'
+import { ChildrenPage } from './children/index'
+import { PaymentPage } from './payment/index'
 // import { UploadCsvPage } from './uploadCsv/index'
 // import { SelectUsersPage } from './selectUser/index'
 import { ManageUserPage } from './manageUser/index'
@@ -59,9 +60,9 @@ export const Index = () => {
                                     <PrivateRoute path="/select_user" component={SelectUsersPage} />
                                     <PrivateRoute path="/ratings" component={RatingPage} />
                                     <PrivateRoute path="/ticket" component={TicketPage} /> */}
-                                    <AdminRoute path="/add_User" component={AddUserPage} />
-                                    {/* <AdminRoute path="/upload_csv" component={UploadCsvPage} /> */}
-                                    <AdminRoute path="/manage_users" component={ManageUserPage} />
+                                    <AdminRoute path="/payments" component={PaymentPage} />
+                                    <AdminRoute path="/childrens" component={ChildrenPage} />
+                                    <AdminRoute path="/users" component={ManageUserPage} />
                                 </>
                             
                         </Switch>

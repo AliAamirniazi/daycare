@@ -7,14 +7,17 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import useManageUser from '../../resources/useManageUser';
+import usePayment from '../../resources/usePayment';
 import { useHistory } from 'react-router-dom';
 import Eye from '../../assets/icon/View.png';
 import TablePagination from '@material-ui/core/TablePagination';
-import { Grid, TableFooter, TextField } from '@material-ui/core';
+import { FormControl, Grid, InputLabel, MenuItem, Select, TableFooter, TextField } from '@material-ui/core';
 import { useTranslation, Trans } from "react-i18next";
 import Search from '../../assets/icon/Search.png';
 import { TablePaginationActions } from '../../components/Pagination'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 interface Data {
   Id: string,
   FullName: string;
@@ -75,13 +78,21 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 20,
       width: 1,
     },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 140,
+    },
+    date: {
+      marginTop: "16px",
+      height: "32px"
+    },
     tabelHeadTitle: {
       fontWeight: 700
     }
   }),
 );
 
-export default function UserListing() {
+export default function PaymentListing() {
   const { t } = useTranslation();
   const [order, setOrder] = React.useState<Order>('asc');
   const [total, setTotal] = useState(0)
@@ -89,16 +100,19 @@ export default function UserListing() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState('');
+  const [dateMonth, settdateMonth] = useState(new Date());
+  const [payStatus, setpayStatus] = useState('All');
+
   let history = useHistory();
 
-  const { data, status, error, refetch } = useManageUser({
-    search: search
+  const { data, status, error, refetch } = usePayment({
+    search: { date: dateMonth, status: payStatus }
   });
   const getUserData = () => {
     refetch()
     if (status === "success") {
 
-      setUsersList(data?.user)
+      setUsersList(data?.payment)
       setTotal(data?.count)
     }
   }
@@ -136,24 +150,40 @@ export default function UserListing() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 
+    setpayStatus(event.target.value as string);
+  };
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} elevation={3}>
         <div className="mrbDate">
-          <Grid container direction="row" alignItems="center" >
-            <Grid item xs={12} sm={6} lg={10}>
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={12} sm={6} lg={8}>
             </Grid>
             <Grid item xs={12} sm={6} lg={2}>
-              <TextField size="small" id="outlined-basic" InputProps={{
-                endAdornment: (
-                  <img src={Search} alt="" />)
-              }}
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value)
-                }}
-                label={t("Email") + "," + t("Full Name")} variant="outlined"
+              <FormControl className={classes.formControl}>
+                <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={payStatus}
+                  onChange={handleChange}
+                >
+                  <MenuItem value={'All'}>All</MenuItem>
+                  <MenuItem value={'Paid'}>Paid</MenuItem>
+                  <MenuItem value={'Unpaid'}>Unpaid</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} lg={2}>
+
+              <DatePicker
+                className={classes.date}
+                selected={dateMonth}
+                onChange={(date: any) => settdateMonth(date)}
+                dateFormat="MM/yyyy"
+                showMonthYearPicker
               />
             </Grid>
           </Grid>
@@ -168,37 +198,35 @@ export default function UserListing() {
             <TableHead>
               <TableRow>
                 <TableCell
-                  key="FullName"
                   className={classes.tabelHeadTitle}
                 >
-                  {t("Full Name")}
+                  {t("Children Name")}
                 </TableCell>
                 <TableCell
-                  key="Username"
                   className={classes.tabelHeadTitle}
                 >
-                  {t("Email")}
+                  {t("Amount")}
                 </TableCell>
 
                 <TableCell
-                  key="Role"
                   className={classes.tabelHeadTitle}
                 >
-                  {t("Role")}
+                  {t("Month")}
                 </TableCell>
-
                 <TableCell
-                  key="Action"
                   className={classes.tabelHeadTitle}
-
                 >
-                  {t("Action")}
+                  {t("Year")}
                 </TableCell>
-
+                <TableCell
+                  className={classes.tabelHeadTitle}
+                >
+                  {t("Status")}
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {usersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
+              {usersList?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
 
                 return (
                   <TableRow
@@ -212,17 +240,18 @@ export default function UserListing() {
                   >
 
 
-                    <TableCell align="left">{row.name}</TableCell>
-                    <TableCell align="left">{row.email}</TableCell>
-                    <TableCell align="left">{row.role}</TableCell>
+                    <TableCell align="left">{row?.children?.fullName}</TableCell>
+                    <TableCell align="left">{row?.amount}</TableCell>
+                    <TableCell align="left">{row?.month}</TableCell>
+                    <TableCell align="left">{row?.year}</TableCell>
                     <TableCell align="left">
                       <div
-                        onClick={() => {
-                          history.push(`/users/detail/${row.role}/${row._id}`);
-                        }}
-                      ><img src={Eye} className="eyeIcon" alt="" />
+                        style={
+                          row?.status === 'Unpaid' ?
+                            { backgroundColor: '#EF4349', textAlign: 'center', marginRight: '30px', height: '27px', padding: '5px', borderRadius: '5px', color: 'white' } :
+                            { backgroundColor: '#14A651', textAlign: 'center', marginRight: '30px', height: '27px', padding: '5px', borderRadius: '5px', color: 'white' }}>
+                        {row?.status}
                       </div>
-
                     </TableCell>
                   </TableRow>
                 );

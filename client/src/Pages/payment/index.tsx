@@ -1,19 +1,16 @@
-import { Grid } from '@material-ui/core';
 import React, { Fragment } from 'react'
 import { Route, useRouteMatch, Switch } from 'react-router-dom';
-import AdminRoute from '../../components/auth/AdminRoute';
+// import { AddChildren } from './AddChildren'
+import { PaymentList } from './PaymentList'
 import PrimaryAppBar from '../../components/AppBar';
+import { Grid } from '@material-ui/core';
 import { SideBar } from '../../components/SideBar';
-import { ManageUser } from './ManageUser'
-import { AddUser } from './AddUser'
-import { UserDetail } from './UserDetail'
 
-
-export const ManageUserPage = () => {
+export const PaymentPage = () => {
     let { path } = useRouteMatch();
 
     return (
-        <div >
+        <div>
             <PrimaryAppBar />
             <Grid container >
                 <Grid xs={2}>
@@ -22,9 +19,8 @@ export const ManageUserPage = () => {
                 <Grid xs={10}>
                     <Fragment>
                         <Switch>
-                            <AdminRoute path={path} component={ManageUser} exact />
-                            <Route path={`${path}/add/`} component={AddUser} />
-                            <Route path={`${path}/detail/:role/:id`} component={UserDetail} />
+                            <Route path={path} component={PaymentList} exact></Route>
+                            {/* <Route path={`${path}/add/`} component={AddChildren} /> */}
                         </Switch>
                     </Fragment>
                 </Grid>
@@ -33,3 +29,5 @@ export const ManageUserPage = () => {
 
     )
 }
+
+
