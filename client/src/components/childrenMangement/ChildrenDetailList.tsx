@@ -7,7 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import useUserDetail from '../../resources/useUserDetail';
+import useChildrenDetail from '../../resources/useChildrenDetail';
 import { useHistory } from 'react-router-dom';
 import Eye from '../../assets/icon/View.png';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -16,6 +16,8 @@ import { useTranslation, Trans } from "react-i18next";
 import Search from '../../assets/icon/Search.png';
 import { TablePaginationActions } from '../Pagination'
 import { useParams } from "react-router-dom";
+const moment = require('moment');
+
 interface Data {
   email: string;
   name: string;
@@ -25,6 +27,11 @@ interface Data {
   Role: string;
   role: string;
   Action: string;
+  fullName: string,
+  age: string,
+  gender: string,
+  user: string,
+  parent: string
 }
 
 
@@ -85,7 +92,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function UserDetailList() {
+export default function ChildrenDetailList() {
   const { t } = useTranslation();
   const [order, setOrder] = React.useState<Order>('asc');
   const [total, setTotal] = useState(0)
@@ -94,18 +101,18 @@ export default function UserDetailList() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState('');
   let history = useHistory();
-  const [usersList, setUsersList] = useState<Data>();
-  const [childrenList, setChildrenList] = useState<Data[]>([]);
+  const [attendanceList, setAttendanceList] = useState<any>([]);
+  const [childrenList, setChildrenList] = useState<any>({});
   const { id, role } = useParams<{ id: string, role: string }>()
-  const { data, status, error, refetch } = useUserDetail({
-    id: id, role: role, fullName:search
+  const { data, status, error, refetch } = useChildrenDetail({
+    id: id
   });
   const getUserData = () => {
     refetch()
     if (status === "success") {
 
-      setUsersList(data?.user)
-      setTotal(data?.children.length)
+      setAttendanceList(data?.attendance)
+      setTotal(data?.attendance.length)
       setChildrenList(data?.children)
     }
   }
@@ -146,7 +153,7 @@ export default function UserDetailList() {
   return (
     <>
       <div className="text-left">
-        <h3>User Detail</h3>
+        <h3>Children Detail</h3>
       </div>
       <div className={classes.root}>
         <Paper className={classes.paper} elevation={3}>
@@ -160,25 +167,31 @@ export default function UserDetailList() {
               <TableHead>
                 <TableRow>
                   <TableCell
-                    key="FullName"
                     className={classes.tabelHeadTitle}
                   >
                     {t("Full Name")}
                   </TableCell>
                   <TableCell
-                    key="Username"
                     className={classes.tabelHeadTitle}
                   >
-                    {t("Email")}
+                    {t("Gender")}
+                  </TableCell>
+                  <TableCell
+                    className={classes.tabelHeadTitle}
+                  >
+                    {t("Age")}
+                  </TableCell>
+                  <TableCell
+                    className={classes.tabelHeadTitle}
+                  >
+                    {t("Parent")}
                   </TableCell>
 
                   <TableCell
-                    key="Role"
                     className={classes.tabelHeadTitle}
                   >
-                    {t("Role")}
+                    {t("Teacher")}
                   </TableCell>
-
 
                 </TableRow>
               </TableHead>
@@ -191,9 +204,11 @@ export default function UserDetailList() {
                   tabIndex={-1}
                   selected={false}
                 >
-                  <TableCell align="left">{usersList?.name}</TableCell>
-                  <TableCell align="left">{usersList?.email}</TableCell>
-                  <TableCell align="left">{usersList?.role}</TableCell>
+                  <TableCell align="left">{childrenList?.fullName}</TableCell>
+                  <TableCell align="left">{childrenList?.gender}</TableCell>
+                  <TableCell align="left">{childrenList?.age}</TableCell>
+                  <TableCell align="left">{childrenList?.parent?.name}</TableCell>
+                  <TableCell align="left">{childrenList?.user?.name}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -205,28 +220,10 @@ export default function UserDetailList() {
           ?
           <>
             <div className="text-left">
-              <h3>{role === 'Teacher' ? `Childrens Assign to ${usersList?.name}` : `Childrens of  ${usersList?.name}`}</h3>
+              <h3>Attendance</h3>
             </div>
             <div className={classes.root}>
               <Paper className={classes.paper} elevation={3}>
-                <div className="mrbDate">
-                  <Grid container direction="row" alignItems="center" >
-                    <Grid item xs={12} sm={6} lg={10}>
-                    </Grid>
-                    <Grid item xs={12} sm={6} lg={2}>
-                      <TextField size="small" id="outlined-basic" InputProps={{
-                        endAdornment: (
-                          <img src={Search} alt="" />)
-                      }}
-                        value={search}
-                        onChange={(e) => {
-                          setSearch(e.target.value)
-                        }}
-                        label={t("Full Name")} variant="outlined"
-                      />
-                    </Grid>
-                  </Grid>
-                </div>
                 <TableContainer>
                   <Table
                     className={classes.table}
@@ -239,34 +236,22 @@ export default function UserDetailList() {
                         <TableCell
                           className={classes.tabelHeadTitle}
                         >
-                          {t("Full Name")}
+                          {t("Check In")}
                         </TableCell>
                         <TableCell
                           className={classes.tabelHeadTitle}
                         >
-                          {t("Gender")}
+                          {t("Ckeck Out")}
                         </TableCell>
                         <TableCell
                           className={classes.tabelHeadTitle}
                         >
-                          {t("Age")}
+                          {t("Date")}
                         </TableCell>
-                        <TableCell
-                          className={classes.tabelHeadTitle}
-                        >
-                          {t("Parent")}
-                        </TableCell>
-
-                        <TableCell
-                          className={classes.tabelHeadTitle}
-                        >
-                          {t("Teacher")}
-                        </TableCell>
-
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {childrenList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
+                      {attendanceList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index: string) => {
 
                         return (
                           <TableRow
@@ -280,12 +265,9 @@ export default function UserDetailList() {
                           >
 
 
-                            <TableCell align="left">{row?.fullName}</TableCell>
-                            <TableCell align="left">{row?.gender}</TableCell>
-                            <TableCell align="left">{row?.age}</TableCell>
-                            <TableCell align="left">{row?.parent?.name}</TableCell>
-                            <TableCell align="left">{row?.user?.name}</TableCell>
-
+                            <TableCell align="left">{moment(row?.checkIn).format('h:mm:ss') === 'Invalid date' ? 'N/A' : moment(row?.checkIn).format('h:mm:ss')}</TableCell>
+                            <TableCell align="left">{moment(row?.checkOut).format('h:mm:ss') === 'Invalid date' ? 'N/A' : moment(row?.checkOut).format('h:mm:ss')}</TableCell>
+                            <TableCell align="left">{moment(row?.date).format('YYYY-MM-DD')}</TableCell>
                           </TableRow>
                         );
                       })}
@@ -322,3 +304,5 @@ export default function UserDetailList() {
     </>
   );
 }
+
+

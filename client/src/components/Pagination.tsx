@@ -25,9 +25,7 @@ const useStyles1 = makeStyles((theme) => ({
   export const  TablePaginationActions = (props: TablePaginationActionsProps) => {
     const classes = useStyles1();
     const theme = useTheme();
-    const { count, page, rowsPerPage, onPageChange } = props;
-    console.log('ali',props);
-    
+    const { count, page, rowsPerPage, onPageChange } = props;    
     const handleFirstPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       onPageChange(event, 0);
     };

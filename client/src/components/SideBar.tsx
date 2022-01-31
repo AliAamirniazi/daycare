@@ -172,9 +172,13 @@ export const SideBar = (props: any) => {
           </ListItem>
           <Collapse in={tOpen === 'payments' ? true : false} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button component={NavLink} className={classes.nested} activeClassName="highlighted" to="/payments">
+              <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/payments">
                 <ListItemIcon className={classes.textcolor}> <i className="fas fa-file-csv"></i></ListItemIcon>
                 <ListItemText className={classes.textcolor} primary={'Payments'} />
+              </ListItem>
+              <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/payments/generate">
+                <ListItemIcon className={classes.textcolor}> <i className="fas fa-file-csv"></i></ListItemIcon>
+                <ListItemText className={classes.textcolor} primary={'Generate Payments'} />
               </ListItem>
             </List>
           </Collapse>

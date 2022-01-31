@@ -201,7 +201,6 @@ export default function ChildrenListing() {
             </TableHead>
             <TableBody>
               {usersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
-
                 return (
                   <TableRow
                     hover
@@ -212,8 +211,6 @@ export default function ChildrenListing() {
                     key={index}
                     selected={false}
                   >
-
-
                     <TableCell align="left">{row?.fullName}</TableCell>
                     <TableCell align="left">{row?.gender}</TableCell>
                     <TableCell align="left">{row?.parent?.name}</TableCell>
@@ -221,7 +218,7 @@ export default function ChildrenListing() {
                     <TableCell align="left">
                       <div
                         onClick={() => {
-                          history.push(`/manage_users/user_detail/${row.Id}`);
+                          history.push(`/childrens/detail/${row._id}`);
                         }}
                       ><img src={Eye} className="eyeIcon" alt="" />
                       </div>

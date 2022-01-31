@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { Route, useRouteMatch, Switch } from 'react-router-dom';
-// import { AddChildren } from './AddChildren'
+import { GeneratePayment } from './GeneratePayment'
 import { PaymentList } from './PaymentList'
 import PrimaryAppBar from '../../components/AppBar';
 import { Grid } from '@material-ui/core';
@@ -20,7 +20,7 @@ export const PaymentPage = () => {
                     <Fragment>
                         <Switch>
                             <Route path={path} component={PaymentList} exact></Route>
-                            {/* <Route path={`${path}/add/`} component={AddChildren} /> */}
+                            <Route path={`${path}/generate/`} component={GeneratePayment} />
                         </Switch>
                     </Fragment>
                 </Grid>

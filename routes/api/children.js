@@ -56,23 +56,36 @@ router.get('/', auth, async (req, res) => {
 router.get('/assignChildren', auth, async (req, res) => {
   const { id, role, fullName } = req.query
   let children = []
-  let user ={}
+  let user = {}
   try {
-      if (role === 'Teacher') {
-          user = await User.findOne({ _id: id });
-          children = await Children.find(fullName ? { fullName: { $regex: '.*' + fullName + '.*' }, user: id  } : { user: id }).populate('user').populate('parent');
-      }
-      if (role === 'Parent') {
-          user = await Parent.findOne({ _id: id });
-          children = await Children.find(fullName ? { fullName: { $regex: '.*' + fullName + '.*' }, parent: id  } : { parent: id }).populate('user').populate('parent');;
-      }
-      if(role==='Admin'){
-          user = await User.findOne({ _id: id });
-      }
-      res.json({ user: user, children: children });
+    if (role === 'Teacher') {
+      user = await User.findOne({ _id: id });
+      children = await Children.find(fullName ? { fullName: { $regex: '.*' + fullName + '.*' }, user: id } : { user: id }).populate('user').populate('parent');
+    }
+    if (role === 'Parent') {
+      user = await Parent.findOne({ _id: id });
+      children = await Children.find(fullName ? { fullName: { $regex: '.*' + fullName + '.*' }, parent: id } : { parent: id }).populate('user').populate('parent');;
+    }
+    if (role === 'Admin') {
+      user = await User.findOne({ _id: id });
+    }
+    res.json({ user: user, children: children });
   } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+router.get('/childrenDetail', auth, async (req, res) => {
+  const { id } = req.query
+  let children = {}
+  let attendance = []
+  try {
+    attendance = await Attendance.find({children:id}).populate('children');
+    children = await Children.findOne({_id:id}).populate('user').populate('parent');
+    res.json({children: children,attendance:attendance});
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 });
 router.get('/:id', auth, async (req, res) => {

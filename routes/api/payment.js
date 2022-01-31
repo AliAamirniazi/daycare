@@ -32,8 +32,8 @@ router.post(
 );
 router.get('/payment', auth, async (req, res) => {
   const { search } = req.query;
-  const month = moment(search?.date).format('MMMM');
-  const year = moment(search?.date).format('YYYY');
+  const month = moment(JSON.parse(search).date).format('MMMM');
+  const year = moment(JSON.parse(search).date).format('YYYY');
   const status = JSON.parse(search).status;
   try {
     const payment = await Payment.find(search ? { $and: [{ month: month }, { year: year }, { status: status === 'All' ? ['Paid', 'Unpaid'] : status }] } : null).populate('children').sort({ date: -1 });

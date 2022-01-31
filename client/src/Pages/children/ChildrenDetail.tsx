@@ -1,6 +1,6 @@
 
 import React from 'react';
-import UserDetailList from '../../components/userMangement/UserDetailList';
+import ChildrenDetailList from '../../components/childrenMangement/ChildrenDetailList';
 
 import { makeStyles } from '@material-ui/core';
 export const ChildrenDetail = () => {
@@ -10,7 +10,7 @@ export const ChildrenDetail = () => {
             <div className={classes.root}>
 
                 <main className='width overfllowAuto pr-20 bodyMrTop manage-user-page'>
-                    <UserDetailList />
+                    <ChildrenDetailList />
                 </main>
             </div>
         </>
