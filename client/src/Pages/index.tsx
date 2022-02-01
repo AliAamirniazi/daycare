@@ -1,28 +1,18 @@
 import React, { Fragment, useState } from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-// import PrivateRoute from '../components/auth/PrivateRoute';
 import AdminRoute from '../components/auth/AdminRoute';
-// import { PaymentPage } from './payment/index'
+import PrivateRoute from '../components/auth/PrivateRoute';
 import { SigninPage } from './signin/index'
-// import { FleetPage } from './fleetDetail/index'
-// import { LiveOperationstPage } from './liveOperations/index'
-// import { HelpPage } from './help/index'
-// import { DashboardPage } from './dashboard/index'
 import { ChildrenPage } from './children/index'
+import { AssignedChildrenPage } from './assignedChildren/index'
 import { PaymentPage } from './payment/index'
-// import { UploadCsvPage } from './uploadCsv/index'
-// import { SelectUsersPage } from './selectUser/index'
 import { ManageUserPage } from './manageUser/index'
-// import { RatingPage } from './rating/index'
-// import { TicketPage } from './ticket/index'
 import { useIsFetching } from 'react-query'
 import '../../src/App.css';
 // import { ForgetPassword } from './signin/ForgetPassword';
 // import { ResetPassword } from './signin/ResetPassword';
 // import { FirstTimeLogin } from './signin/FirstTimeLogin';
-// import isAuth from '../components/auth/IsAuth';
 import { Redirect, useHistory } from 'react-router';
-// import { logout } from '../utils/auth';
 
 export const Index = () => {
     let history = useHistory();
@@ -58,8 +48,8 @@ export const Index = () => {
                                     <PrivateRoute path="/help" component={HelpPage} />
                                     <PrivateRoute path="/payment" component={PaymentPage} />
                                     <PrivateRoute path="/select_user" component={SelectUsersPage} />
-                                    <PrivateRoute path="/ratings" component={RatingPage} />
-                                    <PrivateRoute path="/ticket" component={TicketPage} /> */}
+                                    <PrivateRoute path="/ratings" component={RatingPage} /> */}
+                                    <PrivateRoute path="/assignedUser" component={AssignedChildrenPage} />
                                     <AdminRoute path="/payments" component={PaymentPage} />
                                     <AdminRoute path="/childrens" component={ChildrenPage} />
                                     <AdminRoute path="/users" component={ManageUserPage} />

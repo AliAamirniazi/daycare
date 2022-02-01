@@ -6,6 +6,7 @@ import { ChildrenList } from './ChildrenList'
 import PrimaryAppBar from '../../components/AppBar';
 import { Grid } from '@material-ui/core';
 import { SideBar } from '../../components/SideBar';
+import PrivateRoute from '../../components/auth/PrivateRoute';
 
 export const ChildrenPage = () => {
     let { path } = useRouteMatch();
@@ -20,9 +21,9 @@ export const ChildrenPage = () => {
                 <Grid xs={10}>
                     <Fragment>
                         <Switch>
-                            <Route path={path} component={ChildrenList} exact></Route>
-                            <Route path={`${path}/add/`} component={AddChildren} />
-                            <Route path={`${path}/detail/:id`} component={ChildrenDetail} />
+                            <PrivateRoute path={path} component={ChildrenList} exact></PrivateRoute>
+                            <PrivateRoute path={`${path}/add/`} component={AddChildren} />
+                            <PrivateRoute path={`${path}/detail/:id`} component={ChildrenDetail} />
                         </Switch>
                     </Fragment>
                 </Grid>

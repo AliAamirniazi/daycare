@@ -36,15 +36,23 @@ export const isAdmin = () => {
 }
 
 // check is user agent
-export const isAgent = () => {
+export const isTeacher = () => {
     const user_info = localStorage.getItem("user_info");
     if (user_info)
-        if (JSON.parse(user_info).role === 'Agent') {
+        if (JSON.parse(user_info).role === 'Teacher') {
             return true;
         }
     return false
 }
 
+export const isParent = () => {
+    const user_info = localStorage.getItem("user_info");
+    if (user_info)
+        if (JSON.parse(user_info).role === 'Parent') {
+            return true;
+        }
+    return false
+}
 export const fleetDetails = () => {
     const user_info = localStorage.getItem("user_info");
 

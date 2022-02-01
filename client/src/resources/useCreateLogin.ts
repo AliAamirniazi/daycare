@@ -13,7 +13,8 @@ export const useCreateLogin = () => {
 			
 			const role = data.data.role;
 			const name = data.data.name;
-			login({ "token": data.data.token, "role": data.data.role, "user_id": data.data._id, "name": name, "permission": permission });
+			const user_id = data.data.user_id;
+			login({ "token": data.data.token, "role": role, "user_id": user_id, "name": name, "permission": permission});
 		},
 		onError: () => {
 			console.log('erorr')

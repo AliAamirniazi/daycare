@@ -61,24 +61,45 @@ router.get('/payment/:id', auth, async (req, res) => {
   }
 });
 router.post('/generatePayment', auth, async (req, res) => {
-  const { amount } = req.body;
+  const { month, year } = req.body;
   try {
     const children = await Children.find();
     for (const elemt of children) {
-      let payementExist = await Payment.findOne({ month: "Jan", children: elemt._id });
+      let payementExist = await Payment.findOne({ month: month, year: year, children: elemt._id });
       if (!payementExist) {
         let payment = new Payment({
           parent: elemt.parent,
           children: elemt._id,
-          month: "January",
-          year: "2022",
-          amount: amount,
-          status: "Unpaid"
+          month: month,
+          year: year,
+          amount: null,
+          status: "Initiated"
         });
         await payment.save();
       }
     }
-    res.json("Payment Generated");
+    const payment = await Payment.find({ status: 'Initiated' }).populate('children');
+    const count = await Payment.countDocuments({ status: 'Initiated' });
+    res.json({ payment: payment, count: count });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+router.post('/createPayment', auth, async (req, res) => {
+  const { month, year, children, amount } = req.body;
+  try {
+    for (const elemt of children) {
+      let payementExist = await Payment.findOne({ month: month, year: year, children: elemt });
+      if (payementExist) {
+       const ali=  await Payment.findOneAndUpdate({ children: elemt, month: month, year: year }, { status: 'Unpaid' }, {
+        new: true
+      });
+       console.log('month', month,'year',year,elemt);
+
+      }
+    }
+    res.json({ message: 'Payments Generated' });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

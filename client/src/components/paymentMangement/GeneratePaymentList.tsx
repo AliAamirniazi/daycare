@@ -11,10 +11,16 @@ import useChildren from '../../resources/useChildren';
 import { useHistory } from 'react-router-dom';
 import Eye from '../../assets/icon/View.png';
 import TablePagination from '@material-ui/core/TablePagination';
-import { Checkbox, Grid, TableFooter, TextField } from '@material-ui/core';
+import { Checkbox, FormControl, Grid, TableFooter, TextField } from '@material-ui/core';
 import { useTranslation, Trans } from "react-i18next";
 import Search from '../../assets/icon/Search.png';
-import { TablePaginationActions } from '../../components/Pagination'
+import { TablePaginationActions } from '../../components/Pagination';
+import { useGeneratePayment } from '../../resources/useGeneratePayment';
+import { useCreatePayment } from '../../resources/useCreatePayment';
+
+import moment from 'moment';
+
+
 interface Data {
     Id: string,
     FullName: string;
@@ -98,50 +104,70 @@ export default function ChildrenListing(props: any) {
     const [search, setSearch] = React.useState('');
     const [selected, setSelected] = React.useState<readonly string[]>([]);
     let history = useHistory();
+    const [usersList, setUsersList] = useState<any>([]);
+    const [amount, setAmount] = useState<any>('');
 
-    const { data, status, error, refetch } = useChildren({
-        search: search
-    });
-    const getUserData = () => {
-        refetch()
-        if (status === "success") {
+    // const { data, status, error, refetch } = useChildren({
+    //     search: search
+    // });
+    const mutation = useGeneratePayment()
+    const createMutation = useCreatePayment()
 
-            setUsersList(data?.children)
-            setTotal(data?.count)
+    const getPaymentData = () => {
+        if (mutation.isSuccess) {
+
+            setUsersList(mutation.data?.data?.payment)
+            setTotal(mutation.data?.data?.count)
         }
+
     }
-    const [usersList, setUsersList] = useState<Data[]>([]);
+    const generatePayment = () => {
+        mutation.mutate({
+            month: moment().format("MMMM"), year: moment().format("YYYY")
+        })
+
+    }
 
     useEffect(() => {
-        getUserData()
-
-    }, [data])
+        getPaymentData()
+        generatePayment()
+    }, [])
+    useEffect(() => {
+        getPaymentData()
+    }, [mutation.isSuccess])
     const classes = useStyles();
 
     const [dense, setDense] = React.useState(false);
+    const onCreatePayment = (e: { preventDefault: () => void; }) => {
+        e.preventDefault()
+        if (amount > 0 && selected.length > 0) {
+            createMutation.mutate({
+                month: moment().format("MMMM"), year: moment().format("YYYY"), children: selected, amount: amount
+            })
+        } else {
+            alert('Amount is Empty or No User is selected')
+        }
 
 
-
-
+    }
     const { onSelectAllClick, numSelected, rowCount } =
         props;
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelecteds = usersList.map((n: any) => n._id);
-            console.log('aaaaaaa', newSelecteds);
+            const newSelecteds = usersList.map((n: any) => n.children);
             setSelected(newSelecteds);
             return;
         }
         setSelected([]);
     };
-    const handleClick = (event: React.MouseEvent<unknown>, _id: string) => {
+    const handleClick = (event: React.MouseEvent<unknown>, children: string) => {
 
-        const selectedIndex = selected.indexOf(_id);
+        const selectedIndex = selected.indexOf(children);
         let newSelected: readonly string[] = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, _id);
+            newSelected = newSelected.concat(selected, children);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -152,7 +178,6 @@ export default function ChildrenListing(props: any) {
                 selected.slice(selectedIndex + 1),
             );
         }
-        console.log('dddd', newSelected);
         setSelected(newSelected);
     };
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -171,26 +196,21 @@ export default function ChildrenListing(props: any) {
         <div className={classes.root}>
             <Paper className={classes.paper} elevation={3}>
                 <div className="mrbDate">
+                    <h3>Payments for {moment().format("MMMM")}</h3>
                     <Grid container direction="row" alignItems="center">
                         <Grid item xs={3} sm={3} lg={3}>
                             <TextField size="small" id="outlined-basic"
-                                value={search}
+                                type="number"
+                                InputProps={{
+                                    inputProps: {
+                                        min: 0
+                                    }
+                                }}
+                                value={amount}
                                 onChange={(e) => {
-                                    setSearch(e.target.value)
+                                    setAmount(e.target.value)
                                 }}
                                 label={t("Amount")} variant="outlined"
-                            />
-                        </Grid>
-                        <Grid item xs={3} sm={3} lg={3}>
-                            <TextField size="small" id="outlined-basic" InputProps={{
-                                endAdornment: (
-                                    <img src={Search} alt="" />)
-                            }}
-                                value={search}
-                                onChange={(e) => {
-                                    setSearch(e.target.value)
-                                }}
-                                label={t("Full Name")} variant="outlined"
                             />
                         </Grid>
                     </Grid>
@@ -223,13 +243,13 @@ export default function ChildrenListing(props: any) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {usersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
-                                const isItemSelected = isSelected(row._id);
+                            {usersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index: any) => {
+                                const isItemSelected = isSelected(row.children);
                                 const labelId = `enhanced-table-checkbox-${index}`;
                                 return (
                                     <TableRow
                                         hover
-                                        onClick={(event) => handleClick(event, row._id)}
+                                        onClick={(event) => handleClick(event, row.children)}
                                         role="checkbox"
                                         aria-checked={isItemSelected}
                                         tabIndex={-1}
@@ -245,7 +265,7 @@ export default function ChildrenListing(props: any) {
                                                 }}
                                             />
                                         </TableCell>
-                                        <TableCell align="left">{row?.fullName}</TableCell>
+                                        <TableCell align="left">{row?.children?.fullName}</TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -271,6 +291,28 @@ export default function ChildrenListing(props: any) {
                         </TableFooter>
                     </Table>
                 </TableContainer>
+                <div className="mrbDate">
+                    <Grid container direction="row" alignItems="center">
+                        <form className="manageUserFonts" onSubmit={onCreatePayment}  >
+                            <FormControl>
+                                {createMutation.isLoading ? (
+                                    'Creating Users ...'
+                                ) : (
+                                    <>
+                                        {createMutation.isError ? (
+                                            <div>An error occurred: {createMutation.error}</div>
+                                        ) : null}
+                                        {createMutation.isSuccess ? <div>{createMutation.data?.data.message || createMutation.data?.data.error}</div> : null}
+                                        <button
+                                            className="inputboxButton"
+                                            type="submit"
+                                        >{t("Generate  Payments")}</button>
+                                    </>
+                                )}
+                            </FormControl>
+                        </form>
+                    </Grid>
+                </div>
 
             </Paper>
 

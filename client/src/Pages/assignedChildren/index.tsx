@@ -1,16 +1,14 @@
 import { Grid } from '@material-ui/core';
 import React, { Fragment } from 'react'
 import { Route, useRouteMatch, Switch } from 'react-router-dom';
-import AdminRoute from '../../components/auth/AdminRoute';
+import PrivateRoute from '../../components/auth/PrivateRoute';
 import PrimaryAppBar from '../../components/AppBar';
 import { SideBar } from '../../components/SideBar';
-import { ManageUser } from './ManageUser'
-import { AddUser } from './AddUser'
-import { UserDetail } from './UserDetail'
-import PrivateRoute from '../../components/auth/PrivateRoute';
+import { ChildrenDetail } from './ChildrenDetail'
+import { ChildrenList } from './ChildrenList'
 
 
-export const ManageUserPage = () => {
+export const AssignedChildrenPage = () => {
     let { path } = useRouteMatch();
 
     return (
@@ -23,9 +21,8 @@ export const ManageUserPage = () => {
                 <Grid xs={10}>
                     <Fragment>
                         <Switch>
-                            <AdminRoute path={path} component={ManageUser} exact />
-                            <PrivateRoute path={`${path}/add/`} component={AddUser} />
-                            <PrivateRoute path={`${path}/detail/:role/:id`} component={UserDetail} />
+                            <PrivateRoute path={path} component={ChildrenList} exact />
+                            <Route path={`${path}/detail/:id`} component={ChildrenDetail} />
                         </Switch>
                     </Fragment>
                 </Grid>
