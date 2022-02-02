@@ -6,6 +6,7 @@ import PrimaryAppBar from '../../components/AppBar';
 import { Grid } from '@material-ui/core';
 import { SideBar } from '../../components/SideBar';
 import PrivateRoute from '../../components/auth/PrivateRoute';
+import AdminRoute from '../../components/auth/AdminRoute';
 
 export const PaymentPage = () => {
     let { path } = useRouteMatch();
@@ -20,8 +21,8 @@ export const PaymentPage = () => {
                 <Grid xs={10}>
                     <Fragment>
                         <Switch>
-                            <PrivateRoute path={path} component={PaymentList} exact></PrivateRoute>
-                            <PrivateRoute path={`${path}/generate/`} component={GeneratePayment} />
+                            <AdminRoute path={path} component={PaymentList} exact></AdminRoute>
+                            <AdminRoute path={`${path}/generate/`} component={GeneratePayment} />
                         </Switch>
                     </Fragment>
                 </Grid>

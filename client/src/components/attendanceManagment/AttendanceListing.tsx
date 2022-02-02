@@ -7,14 +7,18 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import useUserDetail from '../../resources/useUserDetail';
+import useAttendance from '../../resources/useAttendance';
 import { useHistory } from 'react-router-dom';
 import Eye from '../../assets/icon/View.png';
 import TablePagination from '@material-ui/core/TablePagination';
-import { Grid, TableFooter, TextField } from '@material-ui/core';
+import { FormControl, Grid, InputLabel, MenuItem, Select, TableFooter, TextField } from '@material-ui/core';
 import { useTranslation, Trans } from "react-i18next";
 import Search from '../../assets/icon/Search.png';
 import { TablePaginationActions } from '../Pagination'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from 'moment';
+
 interface Data {
   Id: string,
   FullName: string;
@@ -75,13 +79,21 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 20,
       width: 1,
     },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 140,
+    },
+    date: {
+      marginTop: "16px",
+      height: "32px"
+    },
     tabelHeadTitle: {
       fontWeight: 700
     }
   }),
 );
 
-export default function ChildrenListing() {
+export default function AttendanceListing() {
   const { t } = useTranslation();
   const [order, setOrder] = React.useState<Order>('asc');
   const [total, setTotal] = useState(0)
@@ -89,35 +101,32 @@ export default function ChildrenListing() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState('');
-  let history = useHistory();
+  const [startDate, setStartDate] = useState(new Date());
+  const [payStatus, setpayStatus] = useState('All');
+  const [id, setId] = useState('');
+  const [attendanceList, setAttendanceList] = useState<Data[]>([]);
 
-  // const { data, status, error, refetch } = useUserDetail({
-  //   search: search
-  // });
-  const user_info = localStorage.getItem("user_info");
-  let role = ''
-  let id = ''
-  if (user_info) {
-    role = JSON.parse(user_info).role;
-    id = JSON.parse(user_info).user_id
-  }
+  const user_id = localStorage.getItem("user_info");
 
-  const { data, status, error, refetch } = useUserDetail({
-    id: id, role: role, fullName: search
+  const { data, status, error, refetch } = useAttendance({
+    date: startDate, user: id
   });
   const getUserData = () => {
     refetch()
     if (status === "success") {
 
-      setUsersList(data?.children)
-      setTotal(data?.children?.length)
+      setAttendanceList(data?.attendance)
+      setTotal(data?.count)
     }
   }
-  const [usersList, setUsersList] = useState<Data[]>([]);
 
   useEffect(() => {
     getUserData()
-
+    if (user_id) {
+      if (JSON.parse(user_id).user_id) {
+        setId(JSON.parse(user_id).user_id)
+      }
+    }
   }, [data])
   const classes = useStyles();
 
@@ -147,24 +156,22 @@ export default function ChildrenListing() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 
+    setpayStatus(event.target.value as string);
+  };
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} elevation={3}>
         <div className="mrbDate">
           <Grid container direction="row" alignItems="center">
-            <Grid item xs={12} sm={6} lg={10}>
+            <Grid item xs={12} sm={6} lg={8}>
             </Grid>
             <Grid item xs={12} sm={6} lg={2}>
-              <TextField size="small" id="outlined-basic" InputProps={{
-                endAdornment: (
-                  <img src={Search} alt="" />)
-              }}
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value)
-                }}
-                label={t("Full Name")} variant="outlined"
+
+              <DatePicker
+                selected={startDate}
+                onChange={(date: any) => setStartDate(date)}
               />
             </Grid>
           </Grid>
@@ -181,37 +188,28 @@ export default function ChildrenListing() {
                 <TableCell
                   className={classes.tabelHeadTitle}
                 >
-                  {t("Full Name")}
+                  {t("Children Name")}
                 </TableCell>
                 <TableCell
                   className={classes.tabelHeadTitle}
                 >
-                  {t("Gender")}
-                </TableCell>
-
-                <TableCell
-                  className={classes.tabelHeadTitle}
-                >
-                  {t("Parent")}
+                  {t("Check In")}
                 </TableCell>
                 <TableCell
                   className={classes.tabelHeadTitle}
                 >
-                  {t("Teacher")}
+                  {t("Ckeck Out")}
                 </TableCell>
-
                 <TableCell
-                  key="Action"
                   className={classes.tabelHeadTitle}
-
                 >
-                  {t("Action")}
+                  {t("Date")}
                 </TableCell>
-
               </TableRow>
             </TableHead>
             <TableBody>
-              {usersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
+              {attendanceList?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
+
                 return (
                   <TableRow
                     hover
@@ -222,19 +220,10 @@ export default function ChildrenListing() {
                     key={index}
                     selected={false}
                   >
-                    <TableCell align="left">{row?.fullName}</TableCell>
-                    <TableCell align="left">{row?.gender}</TableCell>
-                    <TableCell align="left">{row?.parent?.name}</TableCell>
-                    <TableCell align="left">{row.user?.name}</TableCell>
-                    <TableCell align="left">
-                      <div
-                        onClick={() => {
-                          history.push(`/assignedUser/detail/${row._id}`);
-                        }}
-                      ><img src={Eye} className="eyeIcon" alt="" />
-                      </div>
-
-                    </TableCell>
+                    <TableCell align="left">{row?.children?.fullName}</TableCell>
+                    <TableCell align="left">{moment(row?.checkIn).format('h:mm:ss') === 'Invalid date' ? 'N/A' : moment(row?.checkIn).format('h:mm:ss')}</TableCell>
+                    <TableCell align="left">{moment(row?.checkOut).format('h:mm:ss') === 'Invalid date' ? 'N/A' : moment(row?.checkOut).format('h:mm:ss')}</TableCell>
+                    <TableCell align="left">{moment(row?.date).format('YYYY-MM-DD')}</TableCell>
                   </TableRow>
                 );
               })}

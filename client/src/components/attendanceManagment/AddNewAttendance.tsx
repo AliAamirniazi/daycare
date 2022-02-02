@@ -11,13 +11,14 @@ import useChildren from '../../resources/useChildren';
 import { useHistory } from 'react-router-dom';
 import Eye from '../../assets/icon/View.png';
 import TablePagination from '@material-ui/core/TablePagination';
-import { Checkbox, FormControl, Grid, TableFooter, TextField } from '@material-ui/core';
+import { Checkbox, FormControl, Grid, InputLabel, MenuItem, Select, TableFooter, TextField } from '@material-ui/core';
 import { useTranslation, Trans } from "react-i18next";
 import Search from '../../assets/icon/Search.png';
-import { TablePaginationActions } from '../../components/Pagination';
-import { useGeneratePayment } from '../../resources/useGeneratePayment';
-import { useCreatePayment } from '../../resources/useCreatePayment';
-
+import { TablePaginationActions } from '../Pagination';
+import { useGenerateAttendance } from '../../resources/useGenerateAttendance';
+import { useCreateAttendance } from '../../resources/useCreateAttendance';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment';
 
 
@@ -77,6 +78,10 @@ const useStyles = makeStyles((theme: Theme) =>
         table: {
             maxWidth: 600,
         },
+        date: {
+            marginTop: "16px",
+            height: "32px"
+        },
         visuallyHidden: {
             border: 0,
             clip: 'rect(0 0 0 0)',
@@ -88,13 +93,17 @@ const useStyles = makeStyles((theme: Theme) =>
             top: 20,
             width: 1,
         },
+        formControl: {
+            margin: theme.spacing(1),
+            minWidth: 140,
+        },
         tabelHeadTitle: {
             fontWeight: 700
         }
     }),
 );
 
-export default function GeneratePaymentList(props: any) {
+export default function AddNewAttendance(props: any) {
     const { t } = useTranslation();
     const [order, setOrder] = React.useState<Order>('asc');
     const [total, setTotal] = useState(0)
@@ -104,48 +113,55 @@ export default function GeneratePaymentList(props: any) {
     const [search, setSearch] = React.useState('');
     const [selected, setSelected] = React.useState<readonly string[]>([]);
     let history = useHistory();
-    const [usersList, setUsersList] = useState<any>([]);
+    const [attendanceList, setAttendanceList] = useState<any>([]);
     const [amount, setAmount] = useState<any>('');
+    const [time, setTime] = useState(new Date());
+    const [checkTime, setCheckTime] = useState('checkIn');
 
     // const { data, status, error, refetch } = useChildren({
     //     search: search
     // });
-    const mutation = useGeneratePayment()
-    const createMutation = useCreatePayment()
+    const mutation = useGenerateAttendance()
+    const createMutation = useCreateAttendance()
 
-    const getPaymentData = () => {
+    const getAttendanceData = () => {
         if (mutation.isSuccess) {
 
-            setUsersList(mutation.data?.data?.payment)
+            setAttendanceList(mutation.data?.data?.attendance)
             setTotal(mutation.data?.data?.count)
         }
 
     }
-    const generatePayment = () => {
-        mutation.mutate({
-            month: moment().format("MMMM"), year: moment().format("YYYY")
-        })
 
+    const generatePayment = () => {
+        const user_id = localStorage.getItem("user_info");
+        if (user_id) {
+            if (JSON.parse(user_id).user_id) {
+                mutation.mutate({
+                    user: JSON.parse(user_id).user_id, checkTime: checkTime
+                })
+            }
+        }
     }
 
     useEffect(() => {
-        getPaymentData()
+        getAttendanceData()
         generatePayment()
-    }, [])
+    }, [checkTime])
     useEffect(() => {
-        getPaymentData()
-    }, [mutation.isSuccess])
+        getAttendanceData()
+    }, [mutation.isSuccess, checkTime])
     const classes = useStyles();
 
     const [dense, setDense] = React.useState(false);
     const onCreatePayment = (e: { preventDefault: () => void; }) => {
         e.preventDefault()
-        if (amount > 0 && selected.length > 0) {
+        if (time && selected.length > 0) {
             createMutation.mutate({
-                month: moment().format("MMMM"), year: moment().format("YYYY"), children: selected, amount: amount
+                children: selected, checkTime: checkTime, time: time
             })
         } else {
-            alert('Amount is Empty or No User is selected')
+            alert('Time is not selected  or  User is not selected')
         }
 
 
@@ -155,7 +171,7 @@ export default function GeneratePaymentList(props: any) {
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelecteds = usersList.map((n: any) => n.children);
+            const newSelecteds = attendanceList.map((n: any) => n.children);
             setSelected(newSelecteds);
             return;
         }
@@ -191,27 +207,42 @@ export default function GeneratePaymentList(props: any) {
         setPage(0);
     };
     const isSelected = (name: string) => selected.indexOf(name) !== -1;
+    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 
+        setCheckTime(event.target.value as string);
+    };
     return (
         <div className={classes.root}>
             <Paper className={classes.paper} elevation={3}>
                 <div className="mrbDate">
-                    <h3>Payments for {moment().format("MMMM")}</h3>
+                    <h4>Attendance for: {`${moment().format("dddd")}  ${moment().format("MMMM")}  ${moment().format("YYYY")}`}</h4>
                     <Grid container direction="row" alignItems="center">
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="demo-simple-select-label">Select</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={checkTime}
+                                onChange={handleChange}
+                            >
+                                <MenuItem value={'checkIn'}>Check In</MenuItem>
+                                <MenuItem value={'checkOut'}>Check Out</MenuItem>
+                            </Select>
+                        </FormControl>
                         <Grid item xs={3} sm={3} lg={3}>
-                            <TextField size="small" id="outlined-basic"
-                                type="number"
-                                InputProps={{
-                                    inputProps: {
-                                        min: 0
-                                    }
-                                }}
-                                value={amount}
-                                onChange={(e) => {
-                                    setAmount(e.target.value)
-                                }}
-                                label={t("Amount")} variant="outlined"
-                            />
+                            <div>
+                                <DatePicker
+                                    className={classes.date}
+                                    selected={time}
+                                    onChange={(date: any) => setTime(date)}
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeIntervals={15}
+                                    timeCaption="Time"
+                                    dateFormat="h:mm aa"
+                                />
+                            </div>
+
                         </Grid>
                     </Grid>
                 </div>
@@ -243,7 +274,7 @@ export default function GeneratePaymentList(props: any) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {usersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index: any) => {
+                            {attendanceList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index: any) => {
                                 const isItemSelected = isSelected(row.children);
                                 const labelId = `enhanced-table-checkbox-${index}`;
                                 return (
@@ -306,7 +337,7 @@ export default function GeneratePaymentList(props: any) {
                                         <button
                                             className="inputboxButton"
                                             type="submit"
-                                        >{t("Generate  Payments")}</button>
+                                        >{t("Add  Attendance")}</button>
                                     </>
                                 )}
                             </FormControl>

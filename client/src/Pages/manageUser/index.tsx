@@ -24,8 +24,8 @@ export const ManageUserPage = () => {
                     <Fragment>
                         <Switch>
                             <AdminRoute path={path} component={ManageUser} exact />
-                            <PrivateRoute path={`${path}/add/`} component={AddUser} />
-                            <PrivateRoute path={`${path}/detail/:role/:id`} component={UserDetail} />
+                            <AdminRoute path={`${path}/add/`} component={AddUser} />
+                            <AdminRoute path={`${path}/detail/:role/:id`} component={UserDetail} />
                         </Switch>
                     </Fragment>
                 </Grid>

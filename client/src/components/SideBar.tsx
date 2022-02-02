@@ -209,13 +209,13 @@ export const SideBar = (props: any) => {
             </ListItem>
             <Collapse in={tOpen === 'attendance' ? true : false} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/childrens/add">
+                <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/attendance/add">
                   <ListItemIcon className={classes.textcolor}> <i className="fas fa-file-csv"></i></ListItemIcon>
-                  <ListItemText className={classes.textcolor} primary={'Register Children'} />
+                  <ListItemText className={classes.textcolor} primary={'Add Attendance'} />
                 </ListItem>
-                <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/childrens/">
+                <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/attendance/">
                   <ListItemIcon className={classes.textcolor}> <i className="fas fa-file-csv"></i></ListItemIcon>
-                  <ListItemText className={classes.textcolor} primary={'Childrens'} />
+                  <ListItemText className={classes.textcolor} primary={'Attendance List'} />
                 </ListItem>
               </List>
             </Collapse>

@@ -6,6 +6,7 @@ import { SigninPage } from './signin/index'
 import { ChildrenPage } from './children/index'
 import { AssignedChildrenPage } from './assignedChildren/index'
 import { PaymentPage } from './payment/index'
+import { AttendancePage } from './attendance/index'
 import { ManageUserPage } from './manageUser/index'
 import { useIsFetching } from 'react-query'
 import '../../src/App.css';
@@ -50,6 +51,7 @@ export const Index = () => {
                                     <PrivateRoute path="/select_user" component={SelectUsersPage} />
                                     <PrivateRoute path="/ratings" component={RatingPage} /> */}
                                     <PrivateRoute path="/assignedUser" component={AssignedChildrenPage} />
+                                    <PrivateRoute path="/attendance" component={AttendancePage} />
                                     <AdminRoute path="/payments" component={PaymentPage} />
                                     <AdminRoute path="/childrens" component={ChildrenPage} />
                                     <AdminRoute path="/users" component={ManageUserPage} />

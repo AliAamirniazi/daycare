@@ -78,8 +78,8 @@ router.post('/generatePayment', auth, async (req, res) => {
         await payment.save();
       }
     }
-    const payment = await Payment.find({ status: 'Initiated' }).populate('children');
-    const count = await Payment.countDocuments({ status: 'Initiated' });
+    const payment = await Payment.find({ status: 'Initiated', month: month, year: year }).populate('children');
+    const count = await Payment.countDocuments({ status: 'Initiated', month: month, year: year });
     res.json({ payment: payment, count: count });
   } catch (err) {
     console.error(err.message);
@@ -92,10 +92,10 @@ router.post('/createPayment', auth, async (req, res) => {
     for (const elemt of children) {
       let payementExist = await Payment.findOne({ month: month, year: year, children: elemt });
       if (payementExist) {
-       const ali=  await Payment.findOneAndUpdate({ children: elemt, month: month, year: year }, { status: 'Unpaid' }, {
-        new: true
-      });
-       console.log('month', month,'year',year,elemt);
+        const ali = await Payment.findOneAndUpdate({ children: elemt, month: month, year: year }, { status: 'Unpaid' }, {
+          new: true
+        });
+        console.log('month', month, 'year', year, elemt);
 
       }
     }
