@@ -41,7 +41,7 @@ export const Dashboard = () => {
   }, [data])
 
   const doughnut = {
-    labels: ['Male', 'Femail', 'Other'],
+    labels: ['Male', 'female', 'Other'],
     datasets: [
       {
         backgroundColor: [
