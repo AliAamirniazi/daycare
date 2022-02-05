@@ -153,6 +153,7 @@ export const AddChildren = () => {
                     <option value=''>{t("Select a Gender")}</option>
                     <option value='Male'>{t("Male")}</option>
                     <option value='Female'>{t("Female")}</option>
+                    <option value='Other'>{t("Other")}</option>
                   </select>
                 </FormControl>
               </Grid>

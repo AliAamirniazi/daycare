@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Image from '../../assets/signin.png'; // Import using relative path
-import logo from '../../assets/Swvl-Logo.png';
+import logo from '../../assets/logoText.png';
 import { Link } from 'react-router-dom';
 import { useCreateLogin } from '../../resources/useCreateLogin'
 import { Redirect } from "react-router-dom";
@@ -54,7 +54,7 @@ export const SignIn = () => {
       <Grid item xs={false} sm={4} md={7} className={` login-image ${classes.image}`} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={` login-acc-div ${classes.paper}`}>
-          <img src={logo} alt="" className="signinlogo" />
+          <img src={logo} alt="" style={{height:'150px'}} className="signinlogo" />
           <div className="title1">
             Login Into Your Account
 
@@ -95,7 +95,7 @@ export const SignIn = () => {
                     <div>An error occurred: {mutation.error}</div>
                   ) : null}
 
-                  { mutation.isSuccess && mutation.data?.data.status === 1 ? (isLogin() && isAdmin() ? <div> <Redirect to='/users' /></div> : (isLogin() && isTeacher() ? <Redirect to='/assignedUser' /> : <Redirect to='/dashboard' />)) : <div>{mutation.data?.data.message}</div>}
+                  { mutation.isSuccess && mutation.data?.data.status === 1 ? (isLogin() && isAdmin() ? <div> <Redirect to='/dashboard' /></div> : (isLogin() && isTeacher() ? <Redirect to='/assignedUser' /> : <Redirect to='/dashboard' />)) : <div>{mutation.data?.data.message}</div>}
                   <div className="signinbutton custom-btn">
                     <Link to='' onClick={() => {
                       mutation.mutate({ email: email.toLowerCase(), password: password })

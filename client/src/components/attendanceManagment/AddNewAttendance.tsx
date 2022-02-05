@@ -133,7 +133,7 @@ export default function AddNewAttendance(props: any) {
 
     }
 
-    const generatePayment = () => {
+    const generateAttendance = () => {
         const user_id = localStorage.getItem("user_info");
         if (user_id) {
             if (JSON.parse(user_id).user_id) {
@@ -146,7 +146,7 @@ export default function AddNewAttendance(props: any) {
 
     useEffect(() => {
         getAttendanceData()
-        generatePayment()
+        generateAttendance()
     }, [checkTime])
     useEffect(() => {
         getAttendanceData()
@@ -154,7 +154,7 @@ export default function AddNewAttendance(props: any) {
     const classes = useStyles();
 
     const [dense, setDense] = React.useState(false);
-    const onCreatePayment = (e: { preventDefault: () => void; }) => {
+    const onCreateAttendance = (e: { preventDefault: () => void; }) => {
         e.preventDefault()
         if (time && selected.length > 0) {
             createMutation.mutate({
@@ -324,7 +324,7 @@ export default function AddNewAttendance(props: any) {
                 </TableContainer>
                 <div className="mrbDate">
                     <Grid container direction="row" alignItems="center">
-                        <form className="manageUserFonts" onSubmit={onCreatePayment}  >
+                        <form className="manageUserFonts" onSubmit={onCreateAttendance}  >
                             <FormControl>
                                 {createMutation.isLoading ? (
                                     'Creating Users ...'

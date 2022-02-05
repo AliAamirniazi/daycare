@@ -10,7 +10,7 @@ import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import Image from '../assets/Swvl-Logo.png';
+import Image from '../assets/logoText.png';
 import flagEng from '../assets/flags/united-states-of-america-flag-icon-32.png'
 import flagArabic from '../assets/flags/saudi-arabia-flag-icon-32.png'
 import { logout } from '../utils/auth';
@@ -111,7 +111,7 @@ export default function PrimaryAppBar(prop: any) {
   };
 
   const { i18n } = useTranslation();
- 
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -176,9 +176,9 @@ export default function PrimaryAppBar(prop: any) {
     <div className={classes.grow}>
       <AppBar position="static" color="default">
         <Toolbar>
-          <img src={Image} />
+          <img style={{ width: '57px' }} src={Image} />
           <Typography className={classes.appBarTitle}>
-            Corporate Dashbord
+            Daycare Dashbord
           </Typography>
           <div className={classes.grow} />
           <div className={`align-items-center ar-direction-ltr ${classes.sectionDesktop}`}>

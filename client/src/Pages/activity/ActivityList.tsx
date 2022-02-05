@@ -1,21 +1,20 @@
 
 import React, { useState, useEffect } from 'react';
-import AttendanceListing from '../../components/attendanceManagment/AttendanceListing';
+import ActivityListing from '../../components/activityManagment/ActivityListing';
 
 import { Button, makeStyles } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-export const AttendanceList = () => {
+export const ActivityList = () => {
     const classes = useStyles1();
 
     return (
         <>
             <div className={classes.root}>
-
                 <main className='width overfllowAuto pr-20 bodyMrTop manage-user-page'>
                     <div className="text-left">
-                        <h3>Attendance List</h3>
+                        <h3>Activity List</h3>
                     </div>
-                    <AttendanceListing />
+                    <ActivityListing />
                 </main>
             </div>
         </>

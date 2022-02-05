@@ -7,17 +7,15 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import useAttendance from '../../resources/useAttendance';
-import { useHistory } from 'react-router-dom';
-import Eye from '../../assets/icon/View.png';
+import useActivityList from '../../resources/useActivityList';
 import TablePagination from '@material-ui/core/TablePagination';
-import { FormControl, Grid, InputLabel, MenuItem, Select, TableFooter, TextField } from '@material-ui/core';
+import { Box, FormControl, Grid, InputLabel, MenuItem, Modal, Select, TableFooter, TextField, Typography } from '@material-ui/core';
 import { useTranslation, Trans } from "react-i18next";
-import Search from '../../assets/icon/Search.png';
 import { TablePaginationActions } from '../Pagination'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment';
+import Eye from '../../assets/icon/View.png';
 
 interface Data {
   Id: string,
@@ -93,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function AttendanceListing() {
+export default function ActivityListing() {
   const { t } = useTranslation();
   const [order, setOrder] = React.useState<Order>('asc');
   const [total, setTotal] = useState(0)
@@ -101,37 +99,43 @@ export default function AttendanceListing() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState('');
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
   const [payStatus, setpayStatus] = useState('All');
-  const [id, setId] = useState('');
-  const [attendanceList, setAttendanceList] = useState<Data[]>([]);
+  const [activityList, setActivityList] = useState<Data[]>([]);
+  const [open, setOpen] = React.useState(false);
+  const [modelData, setModelData] = React.useState<any>({});
 
-  const user_id = localStorage.getItem("user_info");
+  const user_info = localStorage.getItem("user_info");
+  let role = ''
+  let id = ''
+  if (user_info) {
+    role = JSON.parse(user_info).role;
+    id = JSON.parse(user_info).user_id
+  }
 
-  const { data, status, error, refetch } = useAttendance({
-    date: startDate, user: id
+  const { data, status, error, refetch } = useActivityList({
+    user: id, date: startDate
   });
-  const getUserData = () => {
+  const getActivityData = () => {
     refetch()
     if (status === "success") {
 
-      setAttendanceList(data?.attendance)
+      setActivityList(data?.activity)
       setTotal(data?.count)
     }
   }
 
   useEffect(() => {
-    getUserData()
-    if (user_id) {
-      if (JSON.parse(user_id).user_id) {
-        setId(JSON.parse(user_id).user_id)
-      }
-    }
+    getActivityData()
   }, [data])
   const classes = useStyles();
 
   const [dense, setDense] = React.useState(false);
-
+  const handleOpen = (data: any) => {
+    setOpen(true);
+    setModelData(data)
+  }
+  const handleClose = () => setOpen(false);
 
 
 
@@ -144,7 +148,17 @@ export default function AttendanceListing() {
     //onRequestSort(event, property);
 
   };
-
+  const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '50%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
@@ -168,11 +182,14 @@ export default function AttendanceListing() {
             <Grid item xs={12} sm={6} lg={10}>
             </Grid>
             <Grid item xs={12} sm={6} lg={2}>
+              <div>
+                <DatePicker
+                  selected={startDate}
+                  placeholderText={"Select a Date"}
+                  onChange={(date: any) => setStartDate(date)}
+                />
+              </div>
 
-              <DatePicker
-                selected={startDate}
-                onChange={(date: any) => setStartDate(date)}
-              />
             </Grid>
           </Grid>
         </div>
@@ -188,27 +205,22 @@ export default function AttendanceListing() {
                 <TableCell
                   className={classes.tabelHeadTitle}
                 >
-                  {t("Children Name")}
-                </TableCell>
-                <TableCell
-                  className={classes.tabelHeadTitle}
-                >
-                  {t("Check In")}
-                </TableCell>
-                <TableCell
-                  className={classes.tabelHeadTitle}
-                >
-                  {t("Ckeck Out")}
+                  {t("Activity")}
                 </TableCell>
                 <TableCell
                   className={classes.tabelHeadTitle}
                 >
                   {t("Date")}
                 </TableCell>
+                <TableCell
+                  className={classes.tabelHeadTitle}
+                >
+                  {t("Action")}
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {attendanceList?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
+              {activityList?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
 
                 return (
                   <TableRow
@@ -220,10 +232,28 @@ export default function AttendanceListing() {
                     key={index}
                     selected={false}
                   >
-                    <TableCell align="left">{row?.children?.fullName}</TableCell>
-                    <TableCell align="left">{moment(row?.checkIn).format('h:mm:ss') === 'Invalid date' ? 'N/A' : moment(row?.checkIn).format('h:mm:ss')}</TableCell>
-                    <TableCell align="left">{moment(row?.checkOut).format('h:mm:ss') === 'Invalid date' ? 'N/A' : moment(row?.checkOut).format('h:mm:ss')}</TableCell>
-                    <TableCell align="left">{moment(row?.date).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="left">
+                      <span
+                        style={{
+                          display: "inline-block",
+                          width: "180px",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis"
+                        }}>
+                        {row?.activity}
+                      </span>
+                    </TableCell>
+                    <TableCell align="left">{moment(row?.date).format('YYYY-MM-DD') === 'Invalid date' ? 'N/A' : moment(row?.date).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="left">
+                      <div
+                        onClick={
+                          () => handleOpen(row)
+                        }
+                      ><img src={Eye} className="eyeIcon" alt="" />
+                      </div>
+
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -252,7 +282,19 @@ export default function AttendanceListing() {
 
       </Paper>
 
-
-    </div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <h3>Date</h3>
+          <p>{moment(modelData?.date).format('YYYY-MM-DD') === 'Invalid date' ? 'N/A' : moment(modelData?.date).format('YYYY-MM-DD')}</p>
+          <h3>Activity</h3>
+          <p>{modelData?.activity}</p>
+        </Box>
+      </Modal>
+    </div >
   );
 }
