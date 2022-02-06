@@ -1,12 +1,15 @@
-import { Grid } from '@material-ui/core';
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment } from 'react'
 import { Route, useRouteMatch, Switch } from 'react-router-dom';
+import { PaymentList } from './PaymentList'
 import PrimaryAppBar from '../../components/AppBar';
+import { Grid } from '@material-ui/core';
 import { SideBar } from '../../components/SideBar';
-import { Dashboard } from './Dashboard';
+import PrivateRoute from '../../components/auth/PrivateRoute';
 import AdminRoute from '../../components/auth/AdminRoute';
-export const DashboardPage = () => {
+
+export const PayingPage = () => {
     let { path } = useRouteMatch();
+
     return (
         <div>
             <PrimaryAppBar />
@@ -17,7 +20,7 @@ export const DashboardPage = () => {
                 <Grid xs={10}>
                     <Fragment>
                         <Switch>
-                            <AdminRoute path={path} component={Dashboard} exact />
+                            <PrivateRoute path={path} component={PaymentList} exact></PrivateRoute>
                         </Switch>
                     </Fragment>
                 </Grid>
@@ -26,3 +29,5 @@ export const DashboardPage = () => {
 
     )
 }
+
+

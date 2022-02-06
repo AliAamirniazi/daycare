@@ -6,6 +6,7 @@ const normalize = require('normalize-url');
 const auth = require('../../middleware/auth');
 
 const Children = require('../../models/Children');
+const Attendance = require('../../models/Attendance');
 const User = require('../../models/User');
 router.post(
   '/',
@@ -80,7 +81,7 @@ router.get('/childrenDetail', auth, async (req, res) => {
   let children = {}
   let attendance = []
   try {
-    attendance = await Attendance.find({children:id}).populate('children');
+    attendance = await Attendance.find({children:id}).populate('children').sort({ date: -1 });
     children = await Children.findOne({_id:id}).populate('user').populate('parent');
     res.json({children: children,attendance:attendance});
   } catch (err) {

@@ -11,12 +11,15 @@ import usePayment from '../../resources/usePayment';
 import { useHistory } from 'react-router-dom';
 import Eye from '../../assets/icon/View.png';
 import TablePagination from '@material-ui/core/TablePagination';
-import { FormControl, Grid, InputLabel, MenuItem, Select, TableFooter, TextField } from '@material-ui/core';
+import { Box, FormControl, Grid, InputLabel, MenuItem, Modal, Select, TableFooter, TextField } from '@material-ui/core';
 import { useTranslation, Trans } from "react-i18next";
 import Search from '../../assets/icon/Search.png';
 import { TablePaginationActions } from '../../components/Pagination'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import StripeCheckout from 'react-stripe-checkout';
+import { useAddPayment } from '../../resources/useAddPayment';
+
 
 interface Data {
   Id: string,
@@ -100,11 +103,47 @@ export default function PaymentListing() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState('');
-  const [dateMonth, settdateMonth] = useState(new Date());
+  const [dateMonth, settdateMonth] = useState(null);
   const [payStatus, setpayStatus] = useState('All');
+  const [payMonth, setPayMonth] = useState('');
+  const [payYear, setPayYear] = useState('');
+  const [payParent, setPayParent] = useState('');
+  const [payAmount, setPayAmount] = useState('');
+  const [payChildrent, setPayChildrent] = useState('');
+  const [payChildName, setPayChildName] = useState('');
+  const [trueCheck, setTrueCheck] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [modelData, setModelData] = React.useState<any>({});
+  const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '35%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
+
+
+
+
+  const handleOpen = (data: any) => {
+    setOpen(true);
+    setModelData(data)
+    setTrueCheck(true)
+    setPayMonth(data?.month)
+    setPayYear(data?.year)
+    setPayParent(data?.parent)
+    setPayAmount(data?.amount)
+    setPayChildrent(data?.children?._id)
+    setPayChildName(data?.children?.fullName)
+    setTrueCheck(true)
+  }
+  const handleClose = () => setOpen(false);
   let history = useHistory();
-
   const user_info = localStorage.getItem("user_info");
   let role = ''
   let id = ''
@@ -132,8 +171,17 @@ export default function PaymentListing() {
   const classes = useStyles();
 
   const [dense, setDense] = React.useState(false);
+  const createMutation = useAddPayment()
 
 
+  const onCreatePayment = (token: any,) => {
+    // e.preventDefault()
+    if (trueCheck) {
+      createMutation.mutate({
+        token: token, parent: payParent, amount: payAmount, month: payMonth, year: payYear, children: payChildrent
+      })
+    }
+  }
 
 
   const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
@@ -188,6 +236,7 @@ export default function PaymentListing() {
               <DatePicker
                 className={classes.date}
                 selected={dateMonth}
+                placeholderText={'Select'}
                 onChange={(date: any) => settdateMonth(date)}
                 dateFormat="MM/yyyy"
                 showMonthYearPicker
@@ -230,6 +279,11 @@ export default function PaymentListing() {
                 >
                   {t("Status")}
                 </TableCell>
+                <TableCell
+                  className={classes.tabelHeadTitle}
+                >
+                  {t("Action")}
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -260,6 +314,23 @@ export default function PaymentListing() {
                         {row?.status}
                       </div>
                     </TableCell>
+                    <TableCell align="left">
+                      <button
+                        onClick={
+                          () => handleOpen(row)
+                        }
+                        style={{ backgroundColor: '#14A651', textAlign: 'center', marginRight: '30px', height: '27px', padding: '5px', borderRadius: '5px', color: 'white' }} className="btn btn-primary">
+                        Pay Now
+                      </button>
+
+
+                    </TableCell>
+                    {/* <TableCell align="left">
+                      {row?.status === 'Unpaid' ?
+                   
+                        :
+                        null}
+                    </TableCell> */}
                   </TableRow>
                 );
               })}
@@ -285,7 +356,39 @@ export default function PaymentListing() {
             </TableFooter>
           </Table>
         </TableContainer>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <>
+              <h3>Date:</h3>
+              <p>{`${payMonth}-${payYear}`}</p>
+              <h3>Children Name:</h3>
+              <p>{payChildName}</p>
+              <h3>Amount:</h3>
+              <p>{payAmount}</p>
+              <StripeCheckout
+                token={(e: any) => {
+                  onCreatePayment(e)
+                }}
+                stripeKey="pk_test_51KQAQWF0A9gd8GQWm7DgUEh0XItQf2RZlqvegMLIJkGTWDdzzX2KnnY2I6luziLg7Y9k7XX0uYIPsNeEtw3EX4Vx00o68EYJe9"
+                triggerEvent="onClick"
+              >
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                  style={{ backgroundColor: '#14A651', textAlign: 'center', marginRight: '30px', height: '27px', padding: '5px', borderRadius: '5px', color: 'white' }} className="btn btn-primary">
+                  Pay With Card
+                </button>
+              </StripeCheckout>
+            </>
 
+          </Box>
+        </Modal>
       </Paper>
 
 

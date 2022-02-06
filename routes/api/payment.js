@@ -7,37 +7,70 @@ const auth = require('../../middleware/auth');
 const moment = require('moment');
 const Payment = require('../../models/Payment');
 const Children = require('../../models/Children');
-
+const stripe = require('stripe')("sk_test_51KQAQWF0A9gd8GQWSkzlRgo4cFmNBrqv8xNimROdet5yJuppa7bqKLvZ7kpwDthCoxst3Rszeeuv08UxwfP0bE2q004vyuV7WX")
+const { v4: uuidv4 } = require('uuid');
 router.post(
   '/add',
   auth,
   check('parent', 'parent id is required').notEmpty(),
   check('month', 'Month is required').notEmpty(),
-  // check('year', 'Year is required').notEmpty(),
   check('amount', 'Amount is required').notEmpty(),
-  check('status', 'Status is required').notEmpty(),
-  check('children', 'Status is required').notEmpty(),
+  check('children', 'children is is required').notEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { parent, month, year, amount, children, status } = req.body;
-    Payment.findOneAndUpdate({ children, parent, month }, { amount, status }, { upsert: false }, function (err, doc) {
-      if (err) return res.send(500, { error: err });
-      return res.send('Succesfully saved.');
-    });
+    const { parent, month, amount, children, token , year } = req.body;
+    const idempotencyKey = uuidv4();
+    stripe.customers.create({
+      email: token.email,
+      source: token.id
+    })
+      .then(customer => {
+        stripe.charges.create({
+          amount: amount * 100,
+          currency: 'GBP',
+          customer: customer.id,
+          receipt_email:  token.email,
+        }, { idempotencyKey })
+      })
+      .then(()=>{
+        console.log('ali',month,year)
+        Payment.findOneAndUpdate({ children, parent, month,year}, { status: 'Paid' }, { upsert: false }, function (err, doc) {
+          if (err) return res.send(500, { error: err });
+          return res.send('Succesfully saved.');
+        })
+      }
+      )
+      .catch(error => console.error(error));
+
   }
 );
 router.get('/payment', auth, async (req, res) => {
   const { search } = req.query;
-  const month = moment(JSON.parse(search).date).format('MMMM');
-  const year = moment(JSON.parse(search).date).format('YYYY');
+  let month;
+  let year;
+  if (JSON.parse(search).date) {
+    month = moment(JSON.parse(search).date).format('MMMM');
+    year = moment(JSON.parse(search).date).format('YYYY');
+  }
+
   const status = JSON.parse(search).status;
+  const role = JSON.parse(search).role;
+  const id = JSON.parse(search).id;
+  let payment = []
+  let count = 0
   try {
-    const payment = await Payment.find(search ? { $and: [{ month: month }, { year: year }, { status: status === 'All' ? ['Paid', 'Unpaid'] : status }] } : null).populate('children').sort({ date: -1 });
-    const count = await Payment.countDocuments(search ? { $and: [{ month: month }, { year: year }, { status: status === 'All' ? ['Paid', 'Unpaid'] : status }] } : null);
+    if (role === 'Admin') {
+      payment = await Payment.find(search ? { $and: [{ month: month }, { year: year }, { status: status === 'All' ? ['Paid', 'Unpaid'] : status }] } : null).populate('children').sort({ date: -1 });
+      count = await Payment.countDocuments(search ? { $and: [{ month: month }, { year: year }, { status: status === 'All' ? ['Paid', 'Unpaid'] : status }] } : null);
+    }
+    if (role === 'Parent') {
+      payment = await Payment.find(search ? { $and: [month ? { month: month } : {}, year ? { year: year } : {}, { parent: id }, { status: status === 'All' ? ['Paid', 'Unpaid'] : status }] } : null).populate('children').sort({ date: -1 });
+      count = await Payment.countDocuments(search ? { $and: [month ? { month: month } : {}, year ? { year: year } : {}, { parent: id }, { status: status === 'All' ? ['Paid', 'Unpaid'] : status }] } : null);
+    }
     res.json({ payment: payment, count: count });
   } catch (err) {
     console.error(err.message);
@@ -92,7 +125,7 @@ router.post('/createPayment', auth, async (req, res) => {
     for (const elemt of children) {
       let payementExist = await Payment.findOne({ month: month, year: year, children: elemt });
       if (payementExist) {
-        const ali = await Payment.findOneAndUpdate({ children: elemt, month: month, year: year }, { status: 'Unpaid' }, {
+        await Payment.findOneAndUpdate({ children: elemt, month: month, year: year }, { status: 'Unpaid', amount: amount }, {
           new: true
         });
         console.log('month', month, 'year', year, elemt);

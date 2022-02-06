@@ -14,7 +14,7 @@ import Bus from '../assets/icon/Fleet.png';
 import Payment from '../assets/icon/SideBarPayment.png';
 import Calander from '../assets/icon/SideCalander.png';
 import Help from '../assets/icon/Help.png';
-import { isLogin, isAdmin, isTeacher } from '.././utils/auth';
+import { isLogin, isAdmin, isTeacher,isParent } from '.././utils/auth';
 import { NavLink, useHistory } from "react-router-dom";
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
 import { useTranslation } from "react-i18next";
@@ -125,7 +125,7 @@ export const SideBar = (props: any) => {
 
       {(isLogin() && isAdmin() ?
         <List>
-          <ListItem button component={NavLink} exact  activeClassName="highlighted" to="/dashboard">
+          <ListItem button component={NavLink} exact activeClassName="highlighted" to="/dashboard">
             <ListItemIcon>
               <ListItemIcon className={classes.textcolor}> <i className="fas fa-chart-pie dashboardIcon"></i></ListItemIcon>
             </ListItemIcon>
@@ -245,8 +245,41 @@ export const SideBar = (props: any) => {
               </List>
             </Collapse>
           </List>
-          : null
-
+          :
+          isLogin() && isParent() ?
+            <List>
+              <ListItem button onClick={() => handleClick('childrens')}>
+                <ListItemIcon>
+                  <ListItemIcon className={classes.textcolor}> <i className="fas fa-child dashboardIcon"></i></ListItemIcon>
+                </ListItemIcon>
+                <ListItemText className={classes.textcolor} primary="Childrens" />
+                {tOpen === 'childrens' ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={tOpen === 'childrens' ? true : false} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/assignedUser">
+                    <ListItemIcon className={classes.textcolor}> <i className="fas fa-list dashboardIcon"></i></ListItemIcon>
+                    <ListItemText className={classes.textcolor} primary={t("Childrens List")} />
+                  </ListItem>
+                </List>
+              </Collapse>
+              <ListItem button onClick={() => handleClick('payment')}>
+                <ListItemIcon>
+                  <ListItemIcon className={classes.textcolor}> <i className="far fa-credit-card dashboardIcon"></i></ListItemIcon>
+                </ListItemIcon>
+                <ListItemText className={classes.textcolor} primary="Payment" />
+                {tOpen === 'payment' ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={tOpen === 'payment' ? true : false} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/paying">
+                    <ListItemIcon className={classes.textcolor}> <i className="fas fa-list dashboardIcon"></i></ListItemIcon>
+                    <ListItemText className={classes.textcolor} primary={'Payment List'} />
+                  </ListItem>
+                </List>
+              </Collapse>
+            </List>
+            : null
       )}
     </div>
   );

@@ -11,6 +11,7 @@ import { AttendancePage } from './attendance/index'
 import { ManageUserPage } from './manageUser/index'
 import { useIsFetching } from 'react-query'
 import { DashboardPage } from './dashboard/index'
+import { PayingPage } from './paying/index'
 import '../../src/App.css';
 // import { ForgetPassword } from './signin/ForgetPassword';
 // import { ResetPassword } from './signin/ResetPassword';
@@ -52,6 +53,7 @@ export const Index = () => {
                                     <PrivateRoute path="/payment" component={PaymentPage} />
                                     <PrivateRoute path="/select_user" component={SelectUsersPage} />
                                     <PrivateRoute path="/ratings" component={RatingPage} /> */}
+                                <PrivateRoute path="/paying" component={PayingPage} />
                                 <PrivateRoute path="/dashboard" component={DashboardPage} />
                                 <PrivateRoute path="/activity" component={ActivityPage} />
                                 <PrivateRoute path="/assignedUser" component={AssignedChildrenPage} />

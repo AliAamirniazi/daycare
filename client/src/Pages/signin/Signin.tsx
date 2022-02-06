@@ -9,7 +9,7 @@ import logo from '../../assets/logoText.png';
 import { Link } from 'react-router-dom';
 import { useCreateLogin } from '../../resources/useCreateLogin'
 import { Redirect } from "react-router-dom";
-import { isLogin, isAdmin, isTeacher } from '../../utils/auth';
+import { isLogin, isAdmin, isTeacher, isParent } from '../../utils/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -95,7 +95,7 @@ export const SignIn = () => {
                     <div>An error occurred: {mutation.error}</div>
                   ) : null}
 
-                  { mutation.isSuccess && mutation.data?.data.status === 1 ? (isLogin() && isAdmin() ? <div> <Redirect to='/dashboard' /></div> : (isLogin() && isTeacher() ? <Redirect to='/assignedUser' /> : <Redirect to='/dashboard' />)) : <div>{mutation.data?.data.message}</div>}
+                  { mutation.isSuccess && mutation.data?.data.status === 1 ? (isLogin() && isAdmin() ? <div> <Redirect to='/dashboard' /></div> : (isLogin() && isTeacher() ? <Redirect to='/assignedUser' /> : (isLogin() && isParent() ? <Redirect to='/assignedUser' /> : <Redirect to='/' />))) : <div>{mutation.data?.data.message}</div>}
                   <div className="signinbutton custom-btn">
                     <Link to='' onClick={() => {
                       mutation.mutate({ email: email.toLowerCase(), password: password })
