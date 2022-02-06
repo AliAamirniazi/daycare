@@ -315,13 +315,17 @@ export default function PaymentListing() {
                       </div>
                     </TableCell>
                     <TableCell align="left">
-                      <button
-                        onClick={
-                          () => handleOpen(row)
-                        }
-                        style={{ backgroundColor: '#14A651', textAlign: 'center', marginRight: '30px', height: '27px', padding: '5px', borderRadius: '5px', color: 'white' }} className="btn btn-primary">
-                        Pay Now
-                      </button>
+                      {row?.status === 'Unpaid' ?
+                        <button
+                          onClick={
+                            () => handleOpen(row)
+                          }
+                          style={{ backgroundColor: '#14A651', textAlign: 'center', marginRight: '30px', height: '27px', padding: '5px', borderRadius: '5px', color: 'white' }} className="btn btn-primary">
+                          Pay Now
+                        </button>
+                        :
+                        null}
+
 
 
                     </TableCell>
