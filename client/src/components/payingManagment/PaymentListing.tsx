@@ -124,6 +124,8 @@ export default function PaymentListing() {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    color: 'white',
+    backgroundColor: '#373D49'
   };
 
 
@@ -367,35 +369,52 @@ export default function PaymentListing() {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <>
-              <h3>Date:</h3>
-              <p>{`${payMonth}-${payYear}`}</p>
-              <h3>Children Name:</h3>
-              <p>{payChildName}</p>
-              <h3>Amount:</h3>
-              <p>{payAmount}</p>
-              <StripeCheckout
-                token={(e: any) => {
-                  onCreatePayment(e)
-                }}
-                stripeKey="pk_test_51KQAQWF0A9gd8GQWm7DgUEh0XItQf2RZlqvegMLIJkGTWDdzzX2KnnY2I6luziLg7Y9k7XX0uYIPsNeEtw3EX4Vx00o68EYJe9"
-                triggerEvent="onClick"
-              >
-                <button
-                  onClick={() => {
-                    setOpen(false);
+            <Grid container direction="row" alignItems="center">
+              <Grid item xs={6} sm={6} lg={6}>
+                <h3>Date:</h3>
+              </Grid>
+              <Grid item xs={6} sm={6} lg={6}>
+                <p>{`${payMonth}-${payYear}`}</p>
+              </Grid>
+              <Grid item xs={6} sm={6} lg={6}>
+                <h3>Children Name:</h3>
+              </Grid>
+              <Grid item xs={6} sm={6} lg={6}>
+                <p>{payChildName}</p>
+              </Grid>
+              <Grid item xs={6} sm={6} lg={6}>
+                <h3>Amount:</h3>
+              </Grid>
+              <Grid item xs={6} sm={6} lg={6}>
+                <p>{payAmount}</p>
+              </Grid>
+              <Grid item style={{
+                marginLeft: "30%",
+                marginRight: "30%"
+              }}>
+                <StripeCheckout
+                  token={(e: any) => {
+                    onCreatePayment(e)
                   }}
-                  style={{ backgroundColor: '#14A651', textAlign: 'center', marginRight: '30px', height: '27px', padding: '5px', borderRadius: '5px', color: 'white' }} className="btn btn-primary">
-                  Pay With Card
-                </button>
-              </StripeCheckout>
-            </>
+                  stripeKey="pk_test_51KQAQWF0A9gd8GQWm7DgUEh0XItQf2RZlqvegMLIJkGTWDdzzX2KnnY2I6luziLg7Y9k7XX0uYIPsNeEtw3EX4Vx00o68EYJe9"
+                  triggerEvent="onClick"
+                >
+                  <button
+                    onClick={() => {
+                      setOpen(false);
+                    }}
+                    style={{ backgroundColor: '#14A651', textAlign: 'center', marginRight: '30px', height: '27px', padding: '5px', borderRadius: '5px', color: 'white' }} className="btn btn-primary">
+                    Pay With Card
+                  </button>
+                </StripeCheckout>
+              </Grid>
+            </Grid>
 
           </Box>
         </Modal>
       </Paper>
 
 
-    </div>
+    </div >
   );
 }
