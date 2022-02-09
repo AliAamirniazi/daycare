@@ -14,7 +14,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { Box, FormControl, Grid, InputLabel, MenuItem, Modal, Select, TableFooter, TextField } from '@material-ui/core';
 import { useTranslation, Trans } from "react-i18next";
 import Search from '../../assets/icon/Search.png';
-import { TablePaginationActions } from '../../components/Pagination'
+import { TablePaginationActions } from '../Pagination'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import StripeCheckout from 'react-stripe-checkout';

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import AttendanceListing from '../../components/attendanceManagment/AttendanceListing';
+import AttendanceListing from '../../components/attendanceManagement/AttendanceListing';
 
 import { Button, makeStyles } from '@material-ui/core';
 import { Link } from 'react-router-dom';

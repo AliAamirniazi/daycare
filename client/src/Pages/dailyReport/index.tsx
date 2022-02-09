@@ -1,13 +1,12 @@
 import React, { Fragment } from 'react'
 import { Route, useRouteMatch, Switch } from 'react-router-dom';
-import { AddActivity } from './AddActivity'
-import { ActivityList } from './ActivityList'
+import { ReportList } from './ReportList'
 import PrimaryAppBar from '../../components/AppBar';
 import { Grid } from '@material-ui/core';
 import { SideBar } from '../../components/SideBar';
 import PrivateRoute from '../../components/auth/PrivateRoute';
 
-export const ActivityPage = () => {
+export const ReportPage = () => {
     let { path } = useRouteMatch();
 
     return (
@@ -20,8 +19,7 @@ export const ActivityPage = () => {
                 <Grid xs={10}>
                     <Fragment>
                         <Switch>
-                            <PrivateRoute path={path} component={ActivityList} exact></PrivateRoute>
-                            <PrivateRoute path={`${path}/add/`} component={AddActivity} />
+                            <PrivateRoute path={path}exact component={ReportList} />
                         </Switch>
                     </Fragment>
                 </Grid>

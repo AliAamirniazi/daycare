@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import ChildrenListing from '../../components/childrenMangement/ChildrenListing';
+import ChildrenListing from '../../components/childrenManagement/ChildrenListing';
 
 import { Button, makeStyles } from '@material-ui/core';
 import { Link } from 'react-router-dom';

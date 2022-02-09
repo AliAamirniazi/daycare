@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import ActivityListing from '../../components/activityManagment/ActivityListing';
+import ActivityListing from '../../components/activityManagement/ActivityListing';
 
 import { Button, makeStyles } from '@material-ui/core';
 import { Link } from 'react-router-dom';

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import PaymentListing from '../../components/payingManagment/PaymentListing';
+import PaymentListing from '../../components/payingManagement/PaymentListing';
 
 import { Button, makeStyles } from '@material-ui/core';
 import { Link } from 'react-router-dom';

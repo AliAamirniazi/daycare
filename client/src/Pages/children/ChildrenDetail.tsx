@@ -1,6 +1,6 @@
 
 import React from 'react';
-import ChildrenDetailList from '../../components/childrenMangement/ChildrenDetailList';
+import ChildrenDetailList from '../../components/childrenManagement/ChildrenDetailList';
 
 import { makeStyles } from '@material-ui/core';
 export const ChildrenDetail = () => {

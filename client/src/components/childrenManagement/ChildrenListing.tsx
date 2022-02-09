@@ -14,7 +14,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { Grid, TableFooter, TextField } from '@material-ui/core';
 import { useTranslation, Trans } from "react-i18next";
 import Search from '../../assets/icon/Search.png';
-import { TablePaginationActions } from '../../components/Pagination'
+import { TablePaginationActions } from '../Pagination'
 interface Data {
   Id: string,
   FullName: string;

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import UserDetailList from '../../components/userMangement/UserDetailList';
+import UserDetailList from '../../components/userManagement/UserDetailList';
 
 import { makeStyles } from '@material-ui/core';
 export const UserDetail = () => {

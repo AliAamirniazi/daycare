@@ -7,17 +7,14 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import usePayment from '../../resources/usePayment';
+import useManageUser from '../../resources/useManageUser';
 import { useHistory } from 'react-router-dom';
 import Eye from '../../assets/icon/View.png';
 import TablePagination from '@material-ui/core/TablePagination';
-import { FormControl, Grid, InputLabel, MenuItem, Select, TableFooter, TextField } from '@material-ui/core';
+import { Grid, TableFooter, TextField } from '@material-ui/core';
 import { useTranslation, Trans } from "react-i18next";
 import Search from '../../assets/icon/Search.png';
-import { TablePaginationActions } from '../../components/Pagination'
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-
+import { TablePaginationActions } from '../Pagination'
 interface Data {
   Id: string,
   FullName: string;
@@ -78,21 +75,13 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 20,
       width: 1,
     },
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 140,
-    },
-    date: {
-      marginTop: "16px",
-      height: "32px"
-    },
     tabelHeadTitle: {
       fontWeight: 700
     }
   }),
 );
 
-export default function PaymentListing() {
+export default function UserListing() {
   const { t } = useTranslation();
   const [order, setOrder] = React.useState<Order>('asc');
   const [total, setTotal] = useState(0)
@@ -100,26 +89,16 @@ export default function PaymentListing() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState('');
-  const [dateMonth, settdateMonth] = useState(new Date());
-  const [payStatus, setpayStatus] = useState('All');
-
   let history = useHistory();
 
-  const user_info = localStorage.getItem("user_info");
-  let role = ''
-  let id = ''
-  if (user_info) {
-    role = JSON.parse(user_info).role;
-    id = JSON.parse(user_info).user_id
-  }
-  const { data, status, error, refetch } = usePayment({
-    search: { date: dateMonth, status: payStatus, role: role, id: id }
+  const { data, status, error, refetch } = useManageUser({
+    search: search
   });
   const getUserData = () => {
     refetch()
     if (status === "success") {
 
-      setUsersList(data?.payment)
+      setUsersList(data?.user)
       setTotal(data?.count)
     }
   }
@@ -157,40 +136,24 @@ export default function PaymentListing() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 
-    setpayStatus(event.target.value as string);
-  };
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} elevation={3}>
         <div className="mrbDate">
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={12} sm={6} lg={8}>
+          <Grid container direction="row" alignItems="center" >
+            <Grid item xs={12} sm={6} lg={10}>
             </Grid>
             <Grid item xs={12} sm={6} lg={2}>
-              <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">Status</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={payStatus}
-                  onChange={handleChange}
-                >
-                  <MenuItem value={'All'}>All</MenuItem>
-                  <MenuItem value={'Paid'}>Paid</MenuItem>
-                  <MenuItem value={'Unpaid'}>Unpaid</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6} lg={2}>
-
-              <DatePicker
-                className={classes.date}
-                selected={dateMonth}
-                onChange={(date: any) => settdateMonth(date)}
-                dateFormat="MM/yyyy"
-                showMonthYearPicker
+              <TextField size="small" id="outlined-basic" InputProps={{
+                endAdornment: (
+                  <img src={Search} alt="" />)
+              }}
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value)
+                }}
+                label={t("Email") + "," + t("Full Name")} variant="outlined"
               />
             </Grid>
           </Grid>
@@ -205,35 +168,37 @@ export default function PaymentListing() {
             <TableHead>
               <TableRow>
                 <TableCell
+                  key="FullName"
                   className={classes.tabelHeadTitle}
                 >
-                  {t("Children Name")}
+                  {t("Full Name")}
                 </TableCell>
                 <TableCell
+                  key="Username"
                   className={classes.tabelHeadTitle}
                 >
-                  {t("Amount")}
+                  {t("Email")}
                 </TableCell>
 
                 <TableCell
+                  key="Role"
                   className={classes.tabelHeadTitle}
                 >
-                  {t("Month")}
+                  {t("Role")}
                 </TableCell>
+
                 <TableCell
+                  key="Action"
                   className={classes.tabelHeadTitle}
+
                 >
-                  {t("Year")}
+                  {t("Action")}
                 </TableCell>
-                <TableCell
-                  className={classes.tabelHeadTitle}
-                >
-                  {t("Status")}
-                </TableCell>
+
               </TableRow>
             </TableHead>
             <TableBody>
-              {usersList?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
+              {usersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
 
                 return (
                   <TableRow
@@ -247,18 +212,17 @@ export default function PaymentListing() {
                   >
 
 
-                    <TableCell align="left">{row?.children?.fullName}</TableCell>
-                    <TableCell align="left">{row?.amount}</TableCell>
-                    <TableCell align="left">{row?.month}</TableCell>
-                    <TableCell align="left">{row?.year}</TableCell>
+                    <TableCell align="left">{row.name}</TableCell>
+                    <TableCell align="left">{row.email}</TableCell>
+                    <TableCell align="left">{row.role}</TableCell>
                     <TableCell align="left">
                       <div
-                        style={
-                          row?.status === 'Unpaid' ?
-                            { backgroundColor: '#EF4349', textAlign: 'center', marginRight: '30px', height: '27px', padding: '5px', borderRadius: '5px', color: 'white' } :
-                            { backgroundColor: '#14A651', textAlign: 'center', marginRight: '30px', height: '27px', padding: '5px', borderRadius: '5px', color: 'white' }}>
-                        {row?.status}
+                        onClick={() => {
+                          history.push(`/users/detail/${row.role}/${row._id}`);
+                        }}
+                      ><img src={Eye} className="eyeIcon" alt="" />
                       </div>
+
                     </TableCell>
                   </TableRow>
                 );

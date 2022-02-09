@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import GeneratePaymentList from '../../components/paymentMangement/GeneratePaymentList';
+import GeneratePaymentList from '../../components/paymentManagement/GeneratePaymentList';
 
 import { Button, makeStyles } from '@material-ui/core';
 import { Link } from 'react-router-dom';

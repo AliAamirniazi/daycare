@@ -14,7 +14,7 @@ import Bus from '../assets/icon/Fleet.png';
 import Payment from '../assets/icon/SideBarPayment.png';
 import Calander from '../assets/icon/SideCalander.png';
 import Help from '../assets/icon/Help.png';
-import { isLogin, isAdmin, isTeacher,isParent } from '.././utils/auth';
+import { isLogin, isAdmin, isTeacher, isParent } from '.././utils/auth';
 import { NavLink, useHistory } from "react-router-dom";
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
 import { useTranslation } from "react-i18next";
@@ -234,11 +234,11 @@ export const SideBar = (props: any) => {
             </ListItem>
             <Collapse in={tOpen === 'activity' ? true : false} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/activity">
+                <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/activity/add">
                   <ListItemIcon className={classes.textcolor}> <i className="fas fa-plus-circle dashboardIcon"></i></ListItemIcon>
                   <ListItemText className={classes.textcolor} primary={'Add Activity'} />
                 </ListItem>
-                <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/activity/add">
+                <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/activity">
                   <ListItemIcon className={classes.textcolor}> <i className="fas fa-list dashboardIcon"></i></ListItemIcon>
                   <ListItemText className={classes.textcolor} primary={'Activity List'} />
                 </ListItem>
@@ -275,6 +275,21 @@ export const SideBar = (props: any) => {
                   <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/paying">
                     <ListItemIcon className={classes.textcolor}> <i className="fas fa-list dashboardIcon"></i></ListItemIcon>
                     <ListItemText className={classes.textcolor} primary={'Payment List'} />
+                  </ListItem>
+                </List>
+              </Collapse>
+              <ListItem button onClick={() => handleClick('dailyReport')}>
+                <ListItemIcon>
+                  <ListItemIcon className={classes.textcolor}> <i className="fas fa-tasks dashboardIcon"></i></ListItemIcon>
+                </ListItemIcon>
+                <ListItemText className={classes.textcolor} primary="Daily Report" />
+                {tOpen === 'dailyReport' ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={tOpen === 'dailyReport' ? true : false} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/reports">
+                    <ListItemIcon className={classes.textcolor}> <i className="fas fa-list dashboardIcon"></i></ListItemIcon>
+                    <ListItemText className={classes.textcolor} primary={'Daily Report List'} />
                   </ListItem>
                 </List>
               </Collapse>

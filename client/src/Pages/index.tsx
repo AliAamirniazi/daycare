@@ -12,6 +12,7 @@ import { ManageUserPage } from './manageUser/index'
 import { useIsFetching } from 'react-query'
 import { DashboardPage } from './dashboard/index'
 import { PayingPage } from './paying/index'
+import { ReportPage } from './dailyReport/index'
 import '../../src/App.css';
 // import { ForgetPassword } from './signin/ForgetPassword';
 // import { ResetPassword } from './signin/ResetPassword';
@@ -43,16 +44,7 @@ export const Index = () => {
                         <Switch>
                             <>
                                 <Route path="/" exact component={SigninPage} />
-                                {/* <Route path={`/forget_password`} component={ForgetPassword} />
-                                    <Route path={`/reset_password/:email/:otp`} component={ResetPassword} />
-                                    <Route path={`/first_time_login/:email/:otp`} component={FirstTimeLogin} />
-                                    <PrivateRoute path="/dashboard" component={DashboardPage} />
-                                    <PrivateRoute path="/fleet_details" component={FleetPage} />
-                                    <PrivateRoute path="/live_Operations" component={LiveOperationstPage} />
-                                    <PrivateRoute path="/help" component={HelpPage} />
-                                    <PrivateRoute path="/payment" component={PaymentPage} />
-                                    <PrivateRoute path="/select_user" component={SelectUsersPage} />
-                                    <PrivateRoute path="/ratings" component={RatingPage} /> */}
+                                <PrivateRoute path="/reports" component={ReportPage} />
                                 <PrivateRoute path="/paying" component={PayingPage} />
                                 <PrivateRoute path="/dashboard" component={DashboardPage} />
                                 <PrivateRoute path="/activity" component={ActivityPage} />
