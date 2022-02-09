@@ -36,8 +36,8 @@ router.post(
                 port: 587,
                 secure: false, // true for 465, false for other ports
                 auth: {
-                    user: 'aliniazisk@gmail.com', // generated ethereal user
-                    pass: 'niazi1997', // generated ethereal password
+                    user: '', // generated ethereal user
+                    pass: '', // generated ethereal password
                 },
             });
 
