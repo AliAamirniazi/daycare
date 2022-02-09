@@ -2,24 +2,26 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 const moment = require('moment');
 
-const AttendanceSchema = new mongoose.Schema({
-    children: {
-        type: Schema.Types.ObjectId,
-        ref: "Children"
-    },
+const DailyLogSchema = new mongoose.Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: "User"
     },
-    checkIn: {
-        type: Date,
-        required: false,
-        default: null
+    children: {
+        type: Schema.Types.ObjectId,
+        ref: "Children"
     },
-    checkOut: {
-        type: Date,
-        required: false,
-        default: null
+    parent: {
+        type: Schema.Types.ObjectId,
+        ref: "Parent"
+    },
+    dailyActivity: {
+        type: Schema.Types.ObjectId,
+        ref: "DailyActivity"
+    },
+    attendance: {
+        type: Schema.Types.ObjectId,
+        ref: "Attendance"
     },
     date: {
         type: Date,
@@ -31,4 +33,4 @@ const AttendanceSchema = new mongoose.Schema({
     }
 });
 
-module.exports = Attendance = mongoose.model('Attendance', AttendanceSchema);
+module.exports = DailyLog = mongoose.model('DailyLog', DailyLogSchema);

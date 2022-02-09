@@ -18,6 +18,7 @@ app.use('/api/children', require('./routes/api/children'));
 app.use('/api/payment', require('./routes/api/payment'));
 app.use('/api/activity', require('./routes/api/activity'));
 app.use('/api/attendance', require('./routes/api/attendance'));
+app.use('/api/dailyLogs', require('./routes/api/dailyLogs'));
 
 const PORT = process.env.PORT || 5000;
 

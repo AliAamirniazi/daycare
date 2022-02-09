@@ -158,6 +158,8 @@ export default function ActivityListing() {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    color: 'white',
+    backgroundColor: '#373D49'
   };
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {

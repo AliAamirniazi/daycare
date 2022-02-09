@@ -62,7 +62,8 @@ router.post('/generateAttendance', auth, async (req, res) => {
                 if (!attendanceExist) {
                     let attendance = new Attendance({
                         children: elemt._id,
-                        date: date
+                        date: date,
+                        user: user
                     });
                     await attendance.save();
                 }

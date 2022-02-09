@@ -103,10 +103,15 @@ export default function AttendanceListing() {
   const [search, setSearch] = React.useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [payStatus, setpayStatus] = useState('All');
-  const [id, setId] = useState('');
   const [attendanceList, setAttendanceList] = useState<Data[]>([]);
 
-  const user_id = localStorage.getItem("user_info");
+  const user_info = localStorage.getItem("user_info");
+  let role = ''
+  let id = ''
+  if (user_info) {
+    role = JSON.parse(user_info).role;
+    id = JSON.parse(user_info).user_id
+  }
 
   const { data, status, error, refetch } = useAttendance({
     date: startDate, user: id
@@ -122,11 +127,7 @@ export default function AttendanceListing() {
 
   useEffect(() => {
     getUserData()
-    if (user_id) {
-      if (JSON.parse(user_id).user_id) {
-        setId(JSON.parse(user_id).user_id)
-      }
-    }
+
   }, [data])
   const classes = useStyles();
 
