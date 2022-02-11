@@ -118,7 +118,7 @@ router.post(
                                                                         Check in Time:</td>
                                                                     <td
                                                                         style="padding: 10px; border-bottom: 1px solid #ededed; color: #455056;">
-                                                                        ${ moment(elemt?.attendance?.checkIn).format("hh:mm:ss a")}</td>
+                                                                        ${moment(elemt?.attendance?.checkIn).format("hh:mm:ss a")}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td
@@ -169,15 +169,31 @@ router.get('/allLogs', auth, async (req, res) => {
     const { date, id, role } = req.query
     let logs = []
     const formatDate = moment(date).format('YYYY-MM-DD');
+    console.log('date',date,formatDate);
     try {
         if (role === 'Teacher') {
-            logs = await DailyLog.find(date ? { user: id, formatDate } : { user: id });
+            logs = await DailyLog.find(date ? { user: id, date:formatDate } : { user: id })
+                .populate('user')
+                .populate('children')
+                .populate('parent')
+                .populate('dailyActivity')
+                .populate('attendance').sort({ date: -1 });
         }
         if (role === 'Parent') {
-            logs = await DailyLog.find(date ? { parent: id, formatDate } : { parent: id });
+            logs = await DailyLog.find(date ? { parent: id, date:formatDate } : { parent: id })
+                .populate('user')
+                .populate('children')
+                .populate('parent')
+                .populate('dailyActivity')
+                .populate('attendance').sort({ date: -1 });
         }
         if (role === 'Admin') {
-            logs = await DailyLog.find(date ? { formatDate } : null);
+            logs = await DailyLog.find(date ? { date:formatDate } : null)
+                .populate('user')
+                .populate('children')
+                .populate('parent')
+                .populate('dailyActivity')
+                .populate('attendance').sort({ date: -1 });
         }
         res.json({ logs: logs });
     } catch (err) {

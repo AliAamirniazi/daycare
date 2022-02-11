@@ -154,7 +154,7 @@ export const SideBar = (props: any) => {
             <ListItemIcon>
               <ListItemIcon className={classes.textcolor}> <i className="fas fa-child dashboardIcon"></i></ListItemIcon>
             </ListItemIcon>
-            <ListItemText className={classes.textcolor} primary="Childrens" />
+            <ListItemText className={classes.textcolor} primary="Children" />
             {tOpen === 'childrens' ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
           <Collapse in={tOpen === 'childrens' ? true : false} timeout="auto" unmountOnExit>
@@ -165,7 +165,7 @@ export const SideBar = (props: any) => {
               </ListItem>
               <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/childrens/">
                 <ListItemIcon className={classes.textcolor}> <i className="fas fa-list dashboardIcon"></i></ListItemIcon>
-                <ListItemText className={classes.textcolor} primary={'Childrens'} />
+                <ListItemText className={classes.textcolor} primary={'Children List'} />
               </ListItem>
             </List>
           </Collapse>
@@ -188,6 +188,21 @@ export const SideBar = (props: any) => {
               </ListItem>
             </List>
           </Collapse>
+          <ListItem button onClick={() => handleClick('dailyReport')}>
+            <ListItemIcon>
+              <ListItemIcon className={classes.textcolor}> <i className="fas fa-tasks dashboardIcon"></i></ListItemIcon>
+            </ListItemIcon>
+            <ListItemText className={classes.textcolor} primary="Daily Report" />
+            {tOpen === 'dailyReport' ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          <Collapse in={tOpen === 'dailyReport' ? true : false} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/reports">
+                <ListItemIcon className={classes.textcolor}> <i className="fas fa-list dashboardIcon"></i></ListItemIcon>
+                <ListItemText className={classes.textcolor} primary={'Daily Report List'} />
+              </ListItem>
+            </List>
+          </Collapse>
         </List>
         : isLogin() && isTeacher() ?
           <List>
@@ -195,14 +210,14 @@ export const SideBar = (props: any) => {
               <ListItemIcon>
                 <ListItemIcon className={classes.textcolor}> <i className="fas fa-child dashboardIcon"></i></ListItemIcon>
               </ListItemIcon>
-              <ListItemText className={classes.textcolor} primary="Childrens" />
+              <ListItemText className={classes.textcolor} primary="Children" />
               {tOpen === 'childrens' ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse in={tOpen === 'childrens' ? true : false} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/assignedUser">
                   <ListItemIcon className={classes.textcolor}> <i className="fas fa-list dashboardIcon"></i></ListItemIcon>
-                  <ListItemText className={classes.textcolor} primary={t("Childrens List")} />
+                  <ListItemText className={classes.textcolor} primary={t("Children List")} />
                 </ListItem>
               </List>
             </Collapse>
@@ -252,14 +267,14 @@ export const SideBar = (props: any) => {
                 <ListItemIcon>
                   <ListItemIcon className={classes.textcolor}> <i className="fas fa-child dashboardIcon"></i></ListItemIcon>
                 </ListItemIcon>
-                <ListItemText className={classes.textcolor} primary="Childrens" />
+                <ListItemText className={classes.textcolor} primary="Children" />
                 {tOpen === 'childrens' ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
               <Collapse in={tOpen === 'childrens' ? true : false} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                   <ListItem button component={NavLink} exact className={classes.nested} activeClassName="highlighted" to="/assignedUser">
                     <ListItemIcon className={classes.textcolor}> <i className="fas fa-list dashboardIcon"></i></ListItemIcon>
-                    <ListItemText className={classes.textcolor} primary={t("Childrens List")} />
+                    <ListItemText className={classes.textcolor} primary={t("Children List")} />
                   </ListItem>
                 </List>
               </Collapse>

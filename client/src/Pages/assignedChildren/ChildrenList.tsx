@@ -13,7 +13,7 @@ export const ChildrenList = () => {
 
                 <main className='width overfllowAuto pr-20 bodyMrTop manage-user-page'>
                      <div className="text-left">
-                        <h3>Childrens List</h3>
+                        <h3>Children List</h3>
                     </div>
                     <ChildrenListing />
                 </main>

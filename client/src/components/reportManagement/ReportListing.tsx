@@ -101,7 +101,7 @@ export default function ReportListing() {
   const [search, setSearch] = React.useState('');
   const [startDate, setStartDate] = useState(null);
   const [payStatus, setpayStatus] = useState('All');
-  const [activityList, setActivityList] = useState<Data[]>([]);
+  const [reportList, setReportList] = useState<Data[]>([]);
   const [open, setOpen] = React.useState(false);
   const [modelData, setModelData] = React.useState<any>({});
 
@@ -120,8 +120,8 @@ export default function ReportListing() {
     refetch()
     if (status === "success") {
 
-      setActivityList(data?.activity)
-      setTotal(data?.count)
+      setReportList(data?.logs)
+      setTotal(data?.logs?.length)
     }
   }
 
@@ -207,7 +207,32 @@ export default function ReportListing() {
                 <TableCell
                   className={classes.tabelHeadTitle}
                 >
+                  {t("Children Name")}
+                </TableCell>
+                <TableCell
+                  className={classes.tabelHeadTitle}
+                >
+                  {t("Teacher")}
+                </TableCell>
+                <TableCell
+                  className={classes.tabelHeadTitle}
+                >
+                  {t("Parent")}
+                </TableCell>
+                <TableCell
+                  className={classes.tabelHeadTitle}
+                >
                   {t("Activity")}
+                </TableCell>
+                <TableCell
+                  className={classes.tabelHeadTitle}
+                >
+                  {t("Check IN Time")}
+                </TableCell>
+                <TableCell
+                  className={classes.tabelHeadTitle}
+                >
+                  {t("Check OUT Time")}
                 </TableCell>
                 <TableCell
                   className={classes.tabelHeadTitle}
@@ -222,7 +247,7 @@ export default function ReportListing() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {activityList?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
+              {reportList?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index) => {
 
                 return (
                   <TableRow
@@ -235,6 +260,15 @@ export default function ReportListing() {
                     selected={false}
                   >
                     <TableCell align="left">
+                      {row?.children?.fullName}
+                    </TableCell>
+                    <TableCell align="left">
+                      {row?.user?.name}
+                    </TableCell>
+                    <TableCell align="left">
+                      {row?.parent?.name}
+                    </TableCell>
+                    <TableCell align="left">
                       <span
                         style={{
                           display: "inline-block",
@@ -243,10 +277,13 @@ export default function ReportListing() {
                           overflow: "hidden",
                           textOverflow: "ellipsis"
                         }}>
-                        {row?.activity}
+                        {row?.dailyActivity?.activity}
                       </span>
                     </TableCell>
-                    <TableCell align="left">{moment(row?.date).format('YYYY-MM-DD') === 'Invalid date' ? 'N/A' : moment(row?.date).format('YYYY-MM-DD')}</TableCell>
+                    <TableCell align="left">{row?.attendance?.checkIn ? moment(row?.attendance?.checkIn).format('hh:mm:ss a') : 'N/A'}</TableCell>
+                    <TableCell align="left">{row?.attendance?.checkOut ? moment(row?.attendance?.checkOut).format('hh:mm:ss a') : 'N/A'}</TableCell>
+                    <TableCell align="left">{row?.attendance?.date ? moment(row?.attendance?.date).format("YYYY-MM-DD") : 'N/A'}</TableCell>
+
                     <TableCell align="left">
                       <div
                         onClick={
@@ -291,10 +328,54 @@ export default function ReportListing() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <h3>Date</h3>
-          <p>{moment(modelData?.date).format('YYYY-MM-DD') === 'Invalid date' ? 'N/A' : moment(modelData?.date).format('YYYY-MM-DD')}</p>
-          <h3>Activity</h3>
-          <p>{modelData?.activity}</p>
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={2} sm={2} lg={2}>
+              <h3>Name:</h3>
+            </Grid>
+            <Grid item xs={6} sm={6} lg={6}>
+              <p>{modelData?.children?.fullName}</p>
+            </Grid>
+          </Grid>
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={2} sm={2} lg={2}>
+              <h3>Teacher:</h3>
+            </Grid>
+            <Grid item xs={6} sm={6} lg={6}>
+              <p>{modelData?.user?.name}</p>
+            </Grid>
+          </Grid>
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={2} sm={2} lg={2}>
+              <h3>Check IN:</h3>
+            </Grid>
+            <Grid item xs={6} sm={6} lg={6}>
+              <h3>{modelData?.attendance?.checkIn ? moment(modelData?.attendance?.checkIn).format('hh:mm:ss a') : 'N/A'}</h3>
+            </Grid>
+          </Grid>
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={2} sm={2} lg={2}>
+              <h3>Check Out:</h3>
+            </Grid>
+            <Grid item xs={6} sm={6} lg={6}>
+              <h3>{modelData?.attendance?.checkOut ? moment(modelData?.attendance?.checkOut).format('hh:mm:ss a') : 'N/A'}</h3>
+            </Grid>
+          </Grid>
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={2} sm={2} lg={2}>
+              <h3>Date:</h3>
+            </Grid>
+            <Grid item xs={6} sm={6} lg={6}>
+              <h3>{modelData?.attendance?.date ? moment(modelData?.attendance?.date).format('YYYY-MM-DD') : 'N/A'}</h3>
+            </Grid>
+          </Grid>
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={2} sm={2} lg={2}>
+              <h3>Activity:</h3>
+            </Grid>
+            <Grid item xs={6} sm={6} lg={8}>
+              <h3>{modelData?.dailyActivity?.activity}</h3>
+            </Grid>
+          </Grid>
         </Box>
       </Modal>
     </div >
