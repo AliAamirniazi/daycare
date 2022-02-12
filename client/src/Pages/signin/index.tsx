@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import { Route, useRouteMatch, Switch } from 'react-router-dom';
-import { SignIn } from './Signin'
+import { Main } from './Main'
+import { Grid } from '@material-ui/core';
 
 export const SigninPage = () => {
     let { path } = useRouteMatch();
@@ -8,11 +9,13 @@ export const SigninPage = () => {
     return (
         <div >
             <Fragment>
-                <Switch>
-                    <Route path={path} component={SignIn} exact />
-                </Switch>
+                <Grid container >
+                    <Switch>
+                        <Route path={path} component={Main} exact />
+                    </Switch>
+                </Grid>
             </Fragment>
-        </div>
+        </div >
 
     )
 }

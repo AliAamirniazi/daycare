@@ -46,7 +46,7 @@ router.post(
 
                 parent.password = await bcrypt.hash(password, salt);
                 await parent.save();
-                res.json({ message: "user is regestered" });
+                res.json({ message: "User is Registered" });
             } else {
                 let parent = await Parent.findOne({ email });
                 let user = await User.findOne({ email });

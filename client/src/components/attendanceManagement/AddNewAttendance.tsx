@@ -337,7 +337,7 @@ export default function AddNewAttendance(props: any) {
                                         <button
                                             className="inputboxButton"
                                             type="submit"
-                                        >{t("Add  Attendance")}</button>
+                                        >{t("Submit")}</button>
                                     </>
                                 )}
                             </FormControl>
