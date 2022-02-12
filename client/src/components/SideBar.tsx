@@ -129,7 +129,7 @@ export const SideBar = (props: any) => {
             <ListItemIcon>
               <ListItemIcon className={classes.textcolor}> <i className="fas fa-chart-pie dashboardIcon"></i></ListItemIcon>
             </ListItemIcon>
-            <ListItemText className={classes.textcolor} primary="DashBoard" />
+            <ListItemText className={classes.textcolor} primary="Dashboard" />
           </ListItem>
           <ListItem button onClick={() => handleClick('users')}>
             <ListItemIcon>

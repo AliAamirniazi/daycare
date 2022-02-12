@@ -200,7 +200,7 @@ export const AddChildren = () => {
                       <button
                         className="inputboxButton"
                         type="submit"
-                      >{t("Create users")}</button>
+                      >{t("Add Children")}</button>
                     </>
                   )}
                 </FormControl>

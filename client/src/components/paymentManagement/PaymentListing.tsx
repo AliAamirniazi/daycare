@@ -248,7 +248,7 @@ export default function PaymentListing() {
 
 
                     <TableCell align="left">{row?.children?.fullName}</TableCell>
-                    <TableCell align="left">{row?.amount}</TableCell>
+                    <TableCell align="left">{`${row?.amount} £`}</TableCell>
                     <TableCell align="left">{row?.month}</TableCell>
                     <TableCell align="left">{row?.year}</TableCell>
                     <TableCell align="left">

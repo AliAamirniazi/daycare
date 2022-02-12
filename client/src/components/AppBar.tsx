@@ -92,7 +92,11 @@ export default function PrimaryAppBar(prop: any) {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [model, setModel] = useState(false)
-
+  const user_info = localStorage.getItem("user_info");
+  let name = ''
+  if (user_info) {
+    name = JSON.parse(user_info).name;
+  }
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -182,6 +186,7 @@ export default function PrimaryAppBar(prop: any) {
           </Typography>
           <div className={classes.grow} />
           <div className={`align-items-center ar-direction-ltr ${classes.sectionDesktop}`}>
+            <h4>{name}</h4>
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -191,7 +196,6 @@ export default function PrimaryAppBar(prop: any) {
               color="inherit"
             >
               <AccountCircle />
-
             </IconButton>
           </div>
 
