@@ -220,7 +220,7 @@ export default function MainAppBar(prop: any) {
             variant="fullWidth"
             aria-label="action tabs example"
           >
-            <Tab label="Home" {...a11yProps(0)} />
+            <Tab label="About Us" {...a11yProps(0)} />
             <Tab label="Login" {...a11yProps(1)} />
           </Tabs>
         </div>
