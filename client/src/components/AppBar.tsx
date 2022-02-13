@@ -94,8 +94,10 @@ export default function PrimaryAppBar(prop: any) {
   const [model, setModel] = useState(false)
   const user_info = localStorage.getItem("user_info");
   let name = ''
+  let role = ''
   if (user_info) {
     name = JSON.parse(user_info).name;
+    role = JSON.parse(user_info).role;
   }
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -182,7 +184,7 @@ export default function PrimaryAppBar(prop: any) {
         <Toolbar>
           <img style={{ width: '57px' }} src={Image} />
           <Typography className={classes.appBarTitle}>
-            Daycare Dashbord
+           { `${role} Portal`}
           </Typography>
           <div className={classes.grow} />
           <div className={`align-items-center ar-direction-ltr ${classes.sectionDesktop}`}>
