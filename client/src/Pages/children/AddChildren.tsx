@@ -121,7 +121,7 @@ export const AddChildren = () => {
           <Grid className={classes.table} container direction="row" alignItems="center">
 
             <Grid item>
-              <p className="leftfloat">&nbsp;{t("Add New Users")}</p>
+              <p className="leftfloat">&nbsp;{t("Add New Children")}</p>
             </Grid>
           </Grid>
           <div className="gridpsacing">
@@ -146,7 +146,7 @@ export const AddChildren = () => {
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12}>
                 <FormControl className="create_user_input">
-                  <label>{t("Role")}*</label>
+                  <label>{t("Gender")}*</label>
                   <span style={{ color: "red" }}>{validGender}</span>
                   <span style={{ color: "red" }}>{validation}</span>
                   <select className="inputbox" onChange={e => setGender(e.target.value)} >
