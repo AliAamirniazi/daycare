@@ -222,8 +222,8 @@ export default function AttendanceListing() {
                     selected={false}
                   >
                     <TableCell align="left">{row?.children?.fullName}</TableCell>
-                    <TableCell align="left">{moment(row?.checkIn).format('h:mm:ss') === 'Invalid date' ? 'N/A' : moment(row?.checkIn).format('h:mm:ss')}</TableCell>
-                    <TableCell align="left">{moment(row?.checkOut).format('h:mm:ss') === 'Invalid date' ? 'N/A' : moment(row?.checkOut).format('h:mm:ss')}</TableCell>
+                    <TableCell align="left">{moment(row?.checkIn).format('h:mm:ss') === 'Invalid date' ? 'N/A' : `${moment(row?.checkIn).format('h:mm:ss')} am`}</TableCell>
+                    <TableCell align="left">{moment(row?.checkOut).format('h:mm:ss') === 'Invalid date' ? 'N/A' : `${moment(row?.checkOut).format('h:mm:ss')} pm`}</TableCell>
                     <TableCell align="left">{moment(row?.date).format('YYYY-MM-DD')}</TableCell>
                   </TableRow>
                 );

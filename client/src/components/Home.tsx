@@ -79,8 +79,7 @@ export const Home = () => {
                         </div>
                         <div>
                             <h3>About Us</h3>
-                            <p>Horizon Day Care is a daycare management system for children. This platform/project is intended for working-class parents who cannot keep their children with them during their office hours since they are working. 
-For the past 4 years, my aunt has been running a daycare system in London. She told me how difficult it is for her to manage a business in a big city like London where it is hard to maintain and save the records of children, then I came across an idea to automate her business by making a daycare management system which will make her business more efficient and manageable.</p>
+                            <p>Welcome to Horizon Daycare! We offer children care programs in which children grow, learn and discover with their peers. At horizon daycare, your child will be cared for by encouraging adults in a creative, safe and supportive learning environment. As a family- and locally-owned organization, we are committed to strong relationships with children, families and teaching staff. We would love for you to visit us to see if Especially for Children is the right place for you and you child.</p>
                         </div>
                     </div>
                 </div>
