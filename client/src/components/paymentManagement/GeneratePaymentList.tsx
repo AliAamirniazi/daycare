@@ -296,7 +296,7 @@ export default function GeneratePaymentList(props: any) {
                         <form className="manageUserFonts" onSubmit={onCreatePayment}  >
                             <FormControl>
                                 {createMutation.isLoading ? (
-                                    'Creating Users ...'
+                                    'Generating Payments ...'
                                 ) : (
                                     <>
                                         {createMutation.isError ? (

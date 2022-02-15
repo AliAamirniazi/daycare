@@ -142,7 +142,7 @@ export default function AddNewActivity(props: any) {
                         <form className="manageUserFonts" onSubmit={onCreateActivity}  >
                             <FormControl>
                                 {createMutation.isLoading ? (
-                                    'Creating Users ...'
+                                    'Adding Activity ...'
                                 ) : (
                                     <>
                                         {createMutation.isError ? (

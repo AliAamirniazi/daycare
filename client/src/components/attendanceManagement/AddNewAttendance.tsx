@@ -327,7 +327,7 @@ export default function AddNewAttendance(props: any) {
                         <form className="manageUserFonts" onSubmit={onCreateAttendance}  >
                             <FormControl>
                                 {createMutation.isLoading ? (
-                                    'Creating Users ...'
+                                    'Adding Attendances ...'
                                 ) : (
                                     <>
                                         {createMutation.isError ? (
