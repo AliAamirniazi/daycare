@@ -10,7 +10,7 @@ const useStyles2 = makeStyles({
 
   root: {
     display: "flex",
-    marginLeft:'20px'
+    marginLeft: '20px'
   },
   table: {
     minWidth: 650
@@ -30,10 +30,13 @@ export const AddUser = () => {
   const [roleId, setRoleId] = useState('');
   const [validation, setValidation] = useState('');
   const [validationCheck, setValidationCheck] = useState('');
-  const [formValidation, setFormValidation] = useState({
-    fullName: '', userName: '', password: '', role: ''
-  })
-
+  // const [formValidation, setFormValidation] = useState({
+  //   fullName: '', userName: '', password: '', role: ''
+  // })
+  const [validName, setvalidName] = useState('');
+  const [validEmail, setvalidEmail] = useState('');
+  const [validPassword, setvalidPassword] = useState('');
+  const [validRole, setvalidRole] = useState('');
   // using custom react query hook for fetching roles
 
   const mutation = useCreateUser()
@@ -45,35 +48,30 @@ export const AddUser = () => {
     //Name
     if (fullName === '') {
       formIsValid = false;
-      formValidation["fullName"] = "Full Name cannot be empty";
-      setValidationCheck('Full Name cannot be empty')
+      setvalidName("Full Name cannot be empty");
     } else {
-      formValidation["fullName"] = "";
+      setvalidName("");
     }
 
     if (email === '') {
       formIsValid = false;
-      formValidation["userName"] = "email cannot be empty";
-      setValidationCheck('User Name cannot be empty')
+      setvalidEmail("email cannot be empty");
     } else {
-      formValidation["userName"] = "";
+      setvalidEmail("");
     }
 
     //Email
     if (password === '') {
       formIsValid = false;
-      formValidation["password"] = "Password cannot be empty";
-      setValidationCheck('Password cannot be empty')
+      setvalidPassword("Password cannot be empty");
     } else {
-      formValidation["password"] = "";
+      setvalidPassword("");
     }
     if (roleId === '') {
       formIsValid = false;
-      formValidation["role"] = "Role cannot be empty";
-      setValidationCheck('Role cannot be empty')
-
+      setvalidRole("Role cannot be empty");
     } else {
-      formValidation["role"] = "";
+      setvalidRole("");
     }
     return formIsValid;
   }
@@ -112,28 +110,28 @@ export const AddUser = () => {
               <Grid item xs={12} sm={12} md={12} lg={12}>
                 <FormControl className="create_user_input">
                   <label>{t("Full Name")}*</label>
-                  <span style={{ color: "red" }}>{formValidation["fullName"]}</span>
+                  <span style={{ color: "red" }}>{validName}</span>
                   <input className="inputbox" type="text" placeholder={t("Add Full Name")} onChange={e => setFullName(e.target.value)} ></input>
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12}>
                 <FormControl className="create_user_input">
                   <label>{t("Email")}*</label>
-                  <span style={{ color: "red" }}>{formValidation["userName"]}</span>
+                  <span style={{ color: "red" }}>{validEmail}</span>
                   <input className="inputbox" type="email" placeholder={t("Email")} onChange={e => setEmail(e.target.value)}></input>
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12}>
                 <FormControl className="create_user_input">
                   <label>{t("Password")}*</label>
-                  <span style={{ color: "red" }}>{formValidation["password"]}</span>
+                  <span style={{ color: "red" }}>{validPassword}</span>
                   <input className="inputbox" type="password" placeholder={t("Password")} onChange={e => setPassword(e.target.value)}></input>
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12}>
                 <FormControl className="create_user_input">
                   <label>{t("Role")}*</label>
-                  <span style={{ color: "red" }}>{formValidation["role"]}</span>
+                  <span style={{ color: "red" }}>{validRole}</span>
                   <span style={{ color: "red" }}>{validation}</span>
                   <select className="inputbox" onChange={e => setRoleId(e.target.value)} >
                     <option value=''>{t("Select a Role")}</option>
