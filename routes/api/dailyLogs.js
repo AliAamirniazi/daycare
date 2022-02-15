@@ -47,7 +47,7 @@ router.post(
                     },
                 });
 
-                transporter.sendMail({
+                await transporter.sendMail({
                     from: '<aliniazisk@gmail.com>',
                     to: elemt?.parent?.email,
                     subject: "Daily Reports",
@@ -169,10 +169,10 @@ router.get('/allLogs', auth, async (req, res) => {
     const { date, id, role } = req.query
     let logs = []
     const formatDate = moment(date).format('YYYY-MM-DD');
-    console.log('date',date,formatDate);
+    console.log('date', date, formatDate);
     try {
         if (role === 'Teacher') {
-            logs = await DailyLog.find(date ? { user: id, date:formatDate } : { user: id })
+            logs = await DailyLog.find(date ? { user: id, date: formatDate } : { user: id })
                 .populate('user')
                 .populate('children')
                 .populate('parent')
@@ -180,7 +180,7 @@ router.get('/allLogs', auth, async (req, res) => {
                 .populate('attendance').sort({ date: -1 });
         }
         if (role === 'Parent') {
-            logs = await DailyLog.find(date ? { parent: id, date:formatDate } : { parent: id })
+            logs = await DailyLog.find(date ? { parent: id, date: formatDate } : { parent: id })
                 .populate('user')
                 .populate('children')
                 .populate('parent')
@@ -188,7 +188,7 @@ router.get('/allLogs', auth, async (req, res) => {
                 .populate('attendance').sort({ date: -1 });
         }
         if (role === 'Admin') {
-            logs = await DailyLog.find(date ? { date:formatDate } : null)
+            logs = await DailyLog.find(date ? { date: formatDate } : null)
                 .populate('user')
                 .populate('children')
                 .populate('parent')

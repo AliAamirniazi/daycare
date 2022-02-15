@@ -34,7 +34,7 @@ router.post(
       });
       await children.save();
 
-      res.json("Children are Added");
+      res.json("Children is Added");
 
 
     } catch (err) {
