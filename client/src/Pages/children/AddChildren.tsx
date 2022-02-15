@@ -190,7 +190,7 @@ export const AddChildren = () => {
               <Grid>
                 <FormControl>
                   {mutation.isLoading ? (
-                    'Creating Users ...'
+                    'Adding Children ...'
                   ) : (
                     <>
                       {mutation.isError ? (
